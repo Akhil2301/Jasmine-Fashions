@@ -1,0 +1,88 @@
+<!-- navbar -->
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-4 fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex justify-content-between align-items-center order-lg-0" href="/">
+                {{!-- <img src="" alt="site icon"> --}}
+                <span class="text-uppercase fw-lighter ms-2">Jasmine Fashions</span>
+            </a>
+
+            <div class="order-lg-2 nav-btns">
+                {{#if user}}
+                <a type="button" class="btn position-relative" href="/cart">
+                    <i class="fa fa-shopping-cart"></i>                     
+                    <span class="position-absolute top-0 start-100 translate-middle badge bg-primary" id="cart-count">{{cartCount}}</span>
+                                    </a>
+                {{/if}}
+                {{#if user}}
+                <div class="dropdown">
+                    <button class="dropbtn"> <i class="fa fa-user">  &nbsp;{{user.fname}}</i></button>
+                    <div class="dropdown-content">
+                        <a href="/userpage">My Account</a>
+                        <a href="/order-success">Orders</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+                </div>
+                {{else}}
+                <a href="/login" class="dropbtn"> <i class="fa fa-user"></i></a>
+                {{/if}}
+                {{!-- <button type="button" class="btn position-relative">
+                    <i class="fa fa-search"></i>
+                </button> --}}
+            </div>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse order-lg-1" id="navMenu">
+                <ul class="navbar-nav mx-auto text-center">
+                    <li class="nav-item px-2 py-2">
+                        <a class="nav-link text-uppercase text-dark" href="/">home</a>
+                    </li>
+                    <li class="nav-item px-2 py-2">
+                        <a class="nav-link text-uppercase text-dark" href="#collection">Men</a>
+                    </li>
+                    <li class="nav-item px-2 py-2">
+                        <a class="nav-link text-uppercase text-dark" href="#special">Womens</a>
+                    </li>
+                    <li class="nav-item px-2 py-2">
+                        <a class="nav-link text-uppercase text-dark" href="#blogs">Kids</a>
+                    </li>
+                    <li class="nav-item px-2 py-2">
+                        <a class="nav-link text-uppercase text-dark" href="#about">Infants</a>
+                    </li>
+                    <li class="nav-item px-2 py-2 border-0">
+                        <a class="nav-link text-uppercase text-dark" href="#popular">Others</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- end of navbar -->
+ <main id="main" class="main">
+
+
+        <section class="section dashboard">
+            <div class="row">
+
+
+
+                <!-- Right side columns -->
+                <div class="col-lg-4">
+
+
+
+
+
+
+
+                </div><!-- End Right side columns -->
+
+            </div>
+        </section>
+
+    </main><!-- End #main -->
+

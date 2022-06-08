@@ -1,0 +1,66 @@
+<main class="mt-5 pt-5">
+    <a href="/orders" id="{{status}}" hidden onclick="menu()"></a>
+    <div class="container mt-5 p-5">
+        <div class="d-flex justify-content-center row">
+            <div class="col-md-10">
+                <div class="rounded">
+                    <div class="table-responsive table-borderless">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </th>
+                                    {{!-- <th># Order </th> --}}
+                                    <th>Delivery</th>
+                                    <th>Phone</th>
+                                    <th>Zip</th>
+                                    <th>status</th>
+                                    <th>Total</th>
+                                    <th>Date</th>
+                                    <th>Cancel</th>
+                                    <th>Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body">
+                                {{#each orders}}
+                                <tr class="cell-1">
+                                    <td class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </td>
+                                    {{!-- <td># {{this._id}}</td> --}}
+                                    <td><span>{{this.deliveryDetails.address}}</span></td>
+                                    <td><span>{{this.deliveryDetails.phone}}</span></td>
+                                    <td><span>{{this.deliveryDetails.zip}}</span></td>
+                                    {{#if this.status.placed}}
+                                    <td><span style="color: rgb(54, 9, 233);">Placed</span></td>
+                                    {{/if}}
+                                    {{#if this.status.cancel}}
+                                    <td><span style="color: red;">Cancelled</span></td>
+                                    {{/if}}
+                                    {{#if this.status.dispatch}}
+                                    <td><span style="color: #066d3c;">Dispatced</span></td>
+                                    {{/if}}
+                                    <td>{{this.totalAmount}}</td>
+                                    <td>{{this.dat}}</td>
+
+                                    <td><a href="/cancel-order/{{this._id}}" style="text-decoration:none;">Cancel</a>
+                                    </td>
+                                    <td><a href="" style="text-decoration:none;">Details</a></td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    document.getElementById('ok').click();
+</script>

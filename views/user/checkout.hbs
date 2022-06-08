@@ -1,0 +1,303 @@
+<!--Main layout-->
+<main class="mt-5 pt-5">
+  <div class="container wow fadeIn pt-5">
+
+    <!-- Heading -->
+    <h2 class="my-3 h2 text-center">Checkout</h2>
+
+    <!--Grid row-->
+    <div class="row">
+
+      <!--Grid column-->
+      <div class="col-md-8 mb-4">
+
+        <!--Card-->
+        <div class="card">
+
+          <!--Card content-->
+          <form action="#" class="card-body" id="checkout-form">
+
+            <!--Grid row-->
+            <div class="row">
+
+              <!--Grid column-->
+              <div class="col-md-6 mb-2">
+
+                <!--firstName-->
+                <div class="md-form ">
+                  <input type="text" name="firstName" id="firstName" class="form-control" value="{{user.fname}}">
+                  <label for="firstName" class="">First name</label>
+                </div>
+
+              </div>
+              <!--Grid column-->
+
+              <!--Grid column-->
+              <div class="col-md-6 mb-2">
+
+                <!--lastName-->
+                <div class="md-form">
+                  <input type="text" name="lastName" id="lastName" value="{{user.lname}}" class="form-control">
+                  <label for="lastName" class="">Last name</label>
+                </div>
+
+              </div>
+              <!--Grid column-->
+
+            </div>
+            <!--Grid row-->
+
+            <!--Username-->
+            {{!-- <div class="md-form input-group pl-0 mb-5">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">@</span>
+              </div>
+              <input type="text" class="form-control py-0" placeholder="Username" aria-describedby="basic-addon1">
+            </div> --}}
+
+            <!--email-->
+            {{!-- <div class="md-form mb-5">
+              <input type="text" id="email" name="email" class="form-control" value="{{user.email}}">
+              <label for="email" class="">Email </label>
+            </div> --}}
+
+            <div class="row">
+              <div class="col-md-6 mb-2">
+
+                <!--address-->
+                <div class="md-form">
+                  <input type="text" id="email" name="email" class="form-control" value="{{user.email}}">
+                  <label for="email" class="">Email </label>
+                </div>
+
+              </div>
+              <!--address-->
+
+              <div class="col-md-6 mb-2">
+
+                <!--phone-->
+                <div class="md-form ">
+                   <input type="hidden" name="addressid" id="addressid" class="form-control" value="{{this.address._id}}">
+                  <input type="text" name="phone" id="phone" class="form-control" value="{{user.phone}}">
+                  <label for="firstName" class="">Phone</label>
+                </div>
+
+              </div>
+            </div>
+            <div class="md-form mb-5">
+              <input type="text" id="address" name="address" class="form-control" value="{{this.address.address}}"
+                placeholder="1234 Main St">
+              <label for="address" class="">Address</label>
+            </div>
+
+
+            <!--Grid row-->
+            <div class="row">
+
+
+              <!--Grid column-->
+
+              <!--Grid column-->
+              <div class="col-lg-4 col-md-6 mb-4">
+
+                <label for="zip">Zip</label>
+                <input type="text" class="form-control" name="zip" id="zip" value="{{this.address.zip}}" placeholder=""
+                  required>
+                <input type="text" class="form-control" name="userId" value="{{user._id}}" hidden placeholder=""
+                  required>
+                <div class="invalid-feedback">
+                  Zip code required.
+                </div>
+
+              </div>
+              <!--Grid column-->
+
+            </div>
+            <!--Grid row-->
+
+            <hr>
+
+            {{!-- <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="same-address">
+              <label class="custom-control-label" for="same-address">Shipping address is the same as my billing
+                address</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="save-info">
+              <label class="custom-control-label" for="save-info">Save this information for next time</label>
+            </div> --}}
+
+            <hr>
+
+            <div class="d-block my-3">
+              <div class="custom-control custom-radio">
+                <input id="credit" name="paymentMethod" value="razorpay" type="radio" class="custom-control-input"
+                  checked required>
+                <label class="custom-control-label" for="credit">Razor Pay</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input id="cod" name="paymentMethod" type="radio" value="COD" class="custom-control-input" checked
+                  required>
+                <label class="custom-control-label" for="cod">C O D</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input id="paypal" name="paymentMethod" type="radio" value="paypal" class="custom-control-input" checked
+                  required>
+                <label class="custom-control-label" for="paypal">Pay-pal</label>
+              </div>
+            </div>
+
+
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" type="submit" id="rzp-button1">Continue to checkout</button>
+
+          </form>
+
+        </div>
+        <!--/.Card-->
+
+      </div>
+      <!--Grid column-->
+
+      <!--Grid column-->
+      <div class="col-md-4 mb-4">
+
+        <!-- Heading -->
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Your cart</span>
+          <span class="badge badge-secondary badge-pill">3</span>
+        </h4>
+
+        <!-- Cart -->
+        <ul class="list-group mb-3 z-depth-1">
+
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Total (RS)</span>
+            <strong>{{totalamount}}</strong>
+          </li>
+        </ul>
+
+
+      </div>
+      <!--Grid column-->
+
+    </div>
+    <!--Grid row-->
+
+  </div>
+</main>
+<!--Main layout-->
+
+{{!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script> --}}
+{{!-- <button id="rzp-button1">Pay</button> --}}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  $("#checkout-form").submit((e) => {
+
+    e.preventDefault();
+    $.ajax({
+      url: '/place-order',
+      method: 'post',
+      data: $('#checkout-form').serialize(),
+      success: (response) => {
+        if (response.codsuccess) {
+          location.href = '/order-success'
+        }
+        else if (response.paypal) {
+         
+          paypalPayment(response,response.data)
+        }
+        else {
+       
+          razorpayPayment(response.data,response)
+          
+        }
+
+      }
+    })
+  })
+
+  function paypalPayment(data,body) {
+      
+    for (let i = 0; i < data.links.length; i++) {
+      if (data.links[i].rel === 'approval_url') {
+        // console.log(('approval_url'))
+        window.location.href = (data.links[i].href);
+       // let link=(data.links[i].href);
+      
+      }
+    }
+    
+  }
+
+  function razorpayPayment(body,order) {
+    //console.log(order)
+var options = {
+    "key": "rzp_test_Vldb0EmPlRSPUM", // Enter the Key ID generated from the Dashboard
+      "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      "currency": "INR",
+      "name": "Jasmin Fashions",
+      "description": "Test Transaction",
+      "image": "https://example.com/your_logo",
+      "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      "handler": function (response) {
+        /*alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature)*/
+        //console.log(order)
+        verifyPayment(response, order,body)
+
+      },
+      "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9999999999"
+      },
+      "notes": {
+        "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+        "color": "#3399cc"
+      }
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        //alert("somes")
+        
+});
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+
+
+  }
+
+  function verifyPayment(payment, order,body) {
+    console.log(order)
+    $.ajax({
+      url: '/verify-payment',
+      data: {
+        payment,
+        order,
+        body
+      },
+      method: 'post',
+
+
+      success: (response) => {
+        if (response) {
+          location.href = '/order-success'
+        }
+        else {
+          alert("payment Failed")
+        }
+
+      }
+
+    })
+  }
+
+
+
+</script>
