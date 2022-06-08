@@ -178,7 +178,7 @@ router.post('/otp', async (req, res) => {
             }
         })
     }).catch((error) => {
-        res.render('user/signup', {err_msg: "Invalid Otp"})
+        res.render('user/signup', {err_msg: "Invalid Otp ..!"})
     });
 
 })
