@@ -903,22 +903,45 @@ module.exports = {
             {_id:objectId(couponid)}
            
             );
-            console.log('coupon')
-            console.log(coupon)
+            
             resolve(coupon)
         })
     },
-    getCartcoupondata:(couponid)=>{
+    getCartcoupondata:(userid)=>{
         //console.log(userId)
         return new Promise(async (resolve, reject) => {
             let coupon = await db.get().collection(collection.COUPON_COLLETION).aggregate([
-            // {$match:{_id:couponid}}
            
-            ]).toArray();
-            //console.log(coupon)
+                     {$match:
+                        {
+                            "userObj.user":{$ne:objectId(userid)}
+                          }
+                    }
+        ]).toArray();
+        //console.log('coupon')
+           //console.log(coupon)
             resolve(coupon)
         })
     },
+
+    getCartcoupondata_use:(userid)=>{
+        //console.log(userId)
+        return new Promise(async (resolve, reject) => {
+            let coupon = await db.get().collection(collection.COUPON_COLLETION).aggregate([
+           
+                     {$match:
+                        {
+                            "userObj.user":objectId(userid)
+                          }
+                    }
+        ]).toArray();
+        //console.log('coupon')
+           //console.log(coupon)
+            resolve(coupon)
+        })
+    },
+
+
 
     checkUsedCoupon: (data) => {
         
@@ -1165,22 +1188,50 @@ module.exports = {
     },
     removecoupnid: (id,coupid) => {
 
-        //console.log(coupid)
+        console.log(coupid)
         
-            
+        return new Promise(async (resolve, reject) => {
+               
 
-            return new Promise(async (resolve, reject) => {
-                let usercart = await db.get().collection(collection.CART_COLLECTION).
-                updateOne( {_id: objectId(coupid) },                           
-                { $unset: { 'userObj': "" }}
-         
-                ).then(async(response) => {             
-                    
-    
-                    resolve({ status: true })
+
+
+
+
+               // db.coupon.updateOne({_id:ObjectId('629f0ad638bf2ba528166c21')},{$pull:{userObj:{user:ObjectId('6287da6f8220051c0a66d580')}}})
+
+
+                db.get().collection(collection.COUPON_COLLETION).updateOne({
+                    _id: objectId(coupid)
+
+                }, {
+                    $pull: {
+                        userObj: {
+                            user: objectId(id)
+                        }
+                    }
+                }).then((response) => {
+
+                    resolve({removeCoupon: true})
                 })
+               
               
             })
+           
+
+            
+
+            // return new Promise(async (resolve, reject) => {
+            //     let usercart = await db.get().collection(collection.CART_COLLECTION).
+            //     updateOne( {_id: objectId(coupid) },                           
+            //     { $unset: { 'userObj': "" }}
+         
+            //     ).then(async(response) => {             
+                    
+    
+            //         resolve({ status: true })
+            //     })
+              
+            // })
           
        
     }

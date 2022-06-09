@@ -4,6 +4,7 @@ const {check, validationResult} = require('express-validator');
 const userHelper = require('../helpers/user-helpers');
 const productHelpers = require('../helpers/product-helpers');
 const userHelpers = require('../helpers/user-helpers');
+const { response } = require('express');
 var objectId = require('mongodb').ObjectId
 const router = express.Router();
 const urlencodedParser = bodyParser.urlencoded({extended: false})
@@ -251,7 +252,7 @@ router.get('/cart', verifyLogin, cartcnt, async (req, res) => {
         totalamtwithotcoupon,
         totalamount,
         address,
-        coupon
+        
 
     })
 
@@ -625,8 +626,9 @@ router.post('/crop-images', (req, res) => { // console.log("ggg")
 
 router.post('/applycoupon',cartcnt, verifyLogin, async (req, res) => { // console.log(req.body)
     let coupon = await userHelper.getCartcoupon(req.body.enteredcoupon)
-    console.log(coupon)
-    if (coupon != undefined) {
+    let coupondata=await userHelper.getCartcoupondata_use(req.body.userid)
+ console.log(req.body.userid)
+    if (coupon != undefined && coupondata==0 ) {
 
         userHelpers.checkUsedCoupon(req.body).then((response) => {
             if (response.status) {
@@ -642,9 +644,14 @@ router.post('/applycoupon',cartcnt, verifyLogin, async (req, res) => { // consol
 
 
         })
+    
 
-
-    } else {
+    }else if(coupondata.length>0){
+        res.json({usedStatus:true})
+    }
+    
+    
+    else {
         res.json({status: false})
     }
 
@@ -675,5 +682,19 @@ router.get('/referalcode',cartcnt, verifyLogin,async (req, res) => {
     })
 })
 
+
+router.post('/getcoupon',cartcnt, verifyLogin,async (req, res) => {
+   // cartCount = req.session.cartCount
+   
+   let coupon = await userHelper.getCartcoupondata(req.body.userid)
+   console.log(coupon)
+   if (coupon){
+    res.json(coupon)
+   }
+  else{
+    res.json({status:true})
+  }
+   
+})
 
 module.exports = router;

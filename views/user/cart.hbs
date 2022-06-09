@@ -49,18 +49,18 @@
               <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                 <!-- Quantity -->
                 <div class="d-flex mb-4" style="max-width: 300px">
-                  <button class="btn btn-primary px-3 me-1"
+                  <button class="btn btn-primary px-2 me-1" style="height: 2.4rem;"
                     onclick="change('{{this._id}}','{{this.product._id}}','{{../users}}',-1)">
                     <i class="fas fa-minus"></i>
                   </button>
 
                   <div class="form-outline">
                     <input min="1" id="{{this.product._id}}" name="quantity" value="{{this.quantity}}" type="text"
-                      class="form-control " disabled="" />
+                      class="form-control text-center " style="width: 5rem;" disabled="" />
                     <label class="form-label" for="form1">Quantity</label>
                   </div>
 
-                  <button class="btn btn-primary px-3 ms-2"
+                  <button class="btn btn-primary px-2 ms-1 " style="height: 2.4rem;"
                     onclick="change('{{this._id}}','{{this.product._id}}','{{../users}}',1)">
                     <i class="fas fa-plus"></i>
                   </button>
@@ -91,14 +91,14 @@
           </div>
           <div class="col-8">
             <div class="d-flex flex-row align-items-center mt-3 mx-2 p-2 bg-white rounded">
-              <input type="text" class="form-control border-1 gift-card " id="coupon" placeholder="Enter Coupon code">
+              <input type="text" class="form-control border-1 gift-card col-8 " id="coupon" placeholder="Enter Coupon code">
               <button class="btn btn-outline-warning btn-xxl mx-2 ml-2" type="button"
                 onclick="applyCoupon('{{user._id}}')">Apply</button>
               {{!-- <button class="btn btn-outline-warning btn-xxl mx-2 ml-2" type="button">remove</button> --}}
               <span>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-outline-warning btn-xxl mx-1 ml-1 " data-bs-toggle="modal"
-                  data-bs-target="#exampleModal">
+                  data-bs-target="#exampleModal" onclick="getCoupon('{{user._id}}')">
                   Get&nbsp;Code
                 </button>
 
@@ -112,8 +112,8 @@
                         <h5 class="modal-title" id="exampleModalLabel">Coupons</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
-                      <div class="modal-body">
-                        {{#each coupon}}
+                      <div class="modal-body" id="data_id">
+                        {{!-- {{#each coupon}}
 
 
                         <div class="card" style="width: 18rem;">
@@ -127,7 +127,7 @@
                         </div>
 
 
-                        {{/each}}
+                        {{/each}} --}}
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -446,7 +446,7 @@
             swal({
               title: "Coupon Not Available",
               text: "",
-              icon: "danger",
+              icon: "warning",
               //buttons: true,
               //dangerMode: true,
             })
@@ -512,6 +512,40 @@
 
 
       })
+
+  }
+
+
+  function getCoupon(id){
+    
+let div=document.getElementById('data_id')
+
+     $.ajax({
+            url: '/getcoupon',
+            data: {
+              userid:id              
+            },
+            method: 'post',
+            success: (response) => {
+                
+                const c=1;
+                div.innerHTML=""
+                for(let i=0;i<response.length;i++){
+                  div.innerHTML+=` <div class="card" style="width: 18rem;">
+
+                          <div class="card-body">
+                            <h5 class="card-title" id='coupon_name'>Coupon ${c+i} :  ${response[i].coupon}</h5>
+                            <p class="card-text"> <input type="text" class="border-1 text-success" value="${response[i]._id}" id="code">
+                            </p>
+                            <h6 id="offper">offper ${response[i].percentage} %</h6>
+                          </div>
+                         `
+    
+                 
+                }
+             
+            }
+          })
 
   }
 
