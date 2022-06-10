@@ -221,7 +221,7 @@ router.get('/cart', verifyLogin, cartcnt, async (req, res) => {
     cartCount = req.session.cartCount
     let user = req.session.user
 
-
+    
     let products = await userHelper.getCartProducts(req.session.user._id)
 
     // couponccode=products[0].couponccode.toString()
@@ -324,6 +324,7 @@ router.post('/remove-product', verifyLogin, cartcnt, (req, res, next) => {
 router.post('/place-orders', verifyLogin, cartcnt, async (req, res) => {
     console.log(req.body.selectAddress)
     // const addressid=req.body.addressid
+    let cartItem=await userHelpers.cartItem(req.session.user._id)
     cartCount = req.session.cartCount
     let totalamount = await userHelper.getTotalAmount(req.session.user._id)
     let address = await userHelper.getAddressbyid(req.body.selectAddress)
@@ -333,7 +334,8 @@ router.post('/place-orders', verifyLogin, cartcnt, async (req, res) => {
         totalamount,
         cartCount,
         user: req.session.user,
-        address
+        address,
+        cartItem
     })
 
 
@@ -696,5 +698,19 @@ router.post('/getcoupon',cartcnt, verifyLogin,async (req, res) => {
   }
    
 })
+
+router.post('/wallet',cartcnt, verifyLogin,async (req, res) => {
+    // cartCount = req.session.cartCount
+ 
+  
+   // console.log('re')
+    //console.log(req.body)
+   //console.log('re')
+    userHelpers.walletApply(req.body).then((response) => { // console.log(response);
+        res.json(response)
+    })
+ 
+    
+ })
 
 module.exports = router;

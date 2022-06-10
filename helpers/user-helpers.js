@@ -329,6 +329,8 @@ module.exports = {
                 couponstatus:1,
                 couponName:1,
                 coupon:1,
+                wallet:1,
+                walletamt:1,
             }
 
         },
@@ -346,9 +348,12 @@ module.exports = {
                 couponstatus:1,
                 couponName:1,
                 coupon:1,
+                wallet:1,
+                walletamt:1,
                 product: {
                     $arrayElemAt: ['$product', 0]
-                }
+                },
+               
             }
 
         }, {
@@ -394,7 +399,7 @@ module.exports = {
 
 
     ]).toArray()
-   //console.log(total[0].total)
+   console.log(total[0].total)
     resolve(total[0].total);
 }
  catch(e)  {
@@ -897,7 +902,7 @@ module.exports = {
     },
 
     getCartcoupon:(couponid)=>{
-        console.log(couponid)
+        //console.log(couponid)
         return new Promise(async (resolve, reject) => {
             let coupon = await db.get().collection(collection.COUPON_COLLETION).findOne(
             {_id:objectId(couponid)}
@@ -1234,6 +1239,116 @@ module.exports = {
             // })
           
        
+    },
+
+
+    walletApply:(data)=>{
+        //console.log(data.userid)
+        return new Promise((resolve, reject) => {
+
+            db.get().collection(collection.CART_COLLECTION).updateOne({
+                user: objectId(data.userid)
+            }, {
+                $set: {
+
+                wallet:true,
+                walletamt:parseInt(data.wallet) 
+
+                }
+            }).then((response) => {
+                resolve({status:true})
+            })
+        })
+        
+
+    },
+
+
+    cartItem:(userId)=>{
+        console.log(userId)
+        return new Promise(async (resolve, reject) => {
+            let cartItem = await db.get().collection(collection.CART_COLLECTION).aggregate([
+                {
+                    $match:{user:objectId(userId)}
+                },
+                {$unwind:'$products'},
+                {
+                  $project:{
+                    item:'$products.item',
+                    quantity:'$products.quantity',
+                    wallet:1,
+                   
+                  }
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTIOS,
+                        localField: 'item',
+                        foreignField: '_id',
+                        as: 'product'
+                    }
+                },
+                {$project:{
+
+                    couponstatus:1,
+                    couponName:1,
+                    coupon:1,
+                    couponccode:1,                      
+                    wallet:1,
+                    quantity:1,
+                    product:{$arrayElemAt: ['$product', 0]}
+                } 
+                },
+                {
+                    $unwind:'$product'
+                },
+                {
+                    $project:{
+                        item: 1,
+                        quantity: 1,
+                        product:1,
+                        couponstatus:1,
+                        couponName:1,
+                        coupon:1,
+                        couponccode:1,
+                          
+                        wa:"$wallet",
+                        Wallet:
+                        {
+                            $cond: { if: 
+                            { $eq: [ "$wallet", true] }, 
+                            then: 'checked', 
+                            else: 'unchecked'}
+                        },
+
+
+                        total:{
+                              
+                       
+                  
+                            $cond: {
+                                // if : {$eq:['$product.catoffstatus',true]},
+                                // then:{$subtract:[{$subtract:['$product.price',{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,'$product.catofferper']},'$product.price']},100]}]}]},{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,'$product.offerper']},'$product.price']},100]}]}]},//$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
+                                // else:'$product.price' 
+                                if : {$or:[{$eq:['$product.catoffstatus',true]},{$eq:['$product.status',true]}]} ,
+                                then:{$subtract:[{$subtract:['$product.price',{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,{$add:[0,{$ifNull:['$product.catofferper',0]}]}]},'$product.price']},100]}]}]},{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,{$add:[0,{$ifNull:['$product.offerper',0]}]}]},'$product.price']},100]}]}]},//$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
+                                else:'$product.price'  
+    
+                                
+    
+                          } 
+                        }
+                    }
+                }
+
+
+            ]).toArray();
+           // console.log(cartItem)
+            resolve(cartItem)
+        })
+
     }
+
+
 
 }

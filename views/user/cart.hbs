@@ -33,7 +33,7 @@
                 <p><strong>{{this.product.Name}}</strong></p>
                 {{!-- <p>Color: blue</p> --}}
                 {{!-- <p>Size: M</p> --}}
-                <p>{{this.description}}</p>
+                <p>{{this.product.description}}</p>
                 <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
                   title="Remove item" onclick="remove(event,'{{this._id}}','{{this.product._id}}','{{../users}}',-1)">
                   <i class="fas fa-trash"></i>

@@ -487,109 +487,43 @@ var objectId = require('mongodb').ObjectId
 
 
                                     // }
-                                    total: {
+total: {
+$cond : {
+    // if : {$eq:['$catoffstatus',true]},
+    // then:{$subtract:[{$subtract:['$price',{$subtract:['$price',{$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]}]}]},{$subtract:['$price',{$divide:[{$multiply:[{$subtract:[100,'$offerper']},'$price']},100]}]}]},//$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
+    // else:'$price'
 
 
-                                        $cond: {
-                                            // if : {$eq:['$catoffstatus',true]},
-                                            // then:{$subtract:[{$subtract:['$price',{$subtract:['$price',{$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]}]}]},{$subtract:['$price',{$divide:[{$multiply:[{$subtract:[100,'$offerper']},'$price']},100]}]}]},//$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
-                                            // else:'$price'
-
-
-                                            // if : {$eq:['$catoffstatus',true]}||{$eq:['$status',true]} ,
-                                            // then:{$subtract:[{$subtract:['$price',{$subtract:['$price',{$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]}]}]},{$subtract:['$price',{$divide:[{$multiply:[{$subtract:[100,{$add:[0,{$ifNull:['$status','$offper',0]}]}]},'$price']},100]}]}]},//$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
-                                            // else:'$price'
-                                            if : {
-                                                $or : [
-                                                    {
-                                                        $eq: ['$catoffstatus', true]
-                                                    }, {
-                                                        $eq: ['$status', true]
-                                                    }
-                                                ]
-
-                                            
-
-                                        },
-                                        then: {
-                                            $subtract: [
-                                                {
-                                                    $subtract: [
-                                                        '$price', {
-                                                            $subtract: [
-                                                                '$price', {
-                                                                    $divide: [
-                                                                        {
-                                                                            $multiply: [
-                                                                                {
-                                                                                    $subtract: [
-                                                                                        100, {
-                                                                                            $add: [
-                                                                                                0, {
-                                                                                                    $ifNull: ['$catofferper', 0]
-                                                                                                }
-                                                                                            ]
-                                                                                        }
-                                                                                    ]
-                                                                                },
-                                                                                '$price'
-                                                                            ]
-                                                                        },
-                                                                        100
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }, {
-                                                    $subtract: [
-                                                        '$price', {
-                                                            $divide: [
-                                                                {
-                                                                    $multiply: [
-                                                                        {
-                                                                            $subtract: [
-                                                                                100, {
-                                                                                    $add: [
-                                                                                        0, {
-                                                                                            $ifNull: ['$offerper', 0]
-                                                                                        }
-                                                                                    ]
-                                                                                }
-                                                                            ]
-                                                                        },
-                                                                        '$price'
-                                                                    ]
-                                                                },
-                                                                100
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }, // $divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
-                                        else  : '$price'
-
-
-                                        
-
-
-                                    }
-                                }
-
-                            }
-
-                        }]
-                ).toArray();
-                resolve(products[0])
+    // if : {$eq:['$catoffstatus',true]}||{$eq:['$status',true]} ,
+    // then:{$subtract:[{$subtract:['$price',{$subtract:['$price',{$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]}]}]},{$subtract:['$price',{$divide:[{$multiply:[{$subtract:[100,{$add:[0,{$ifNull:['$status','$offper',0]}]}]},'$price']},100]}]}]},//$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
+    // else:'$price'
+    if : {
+        $or : [
+            {
+                $eq: ['$catoffstatus', true]
+            }, {
+                $eq: ['$status', true]
             }
-        )
-    },
+        ]
+
+
+    
+
+
+},
+then : { $subtract: [{$subtract: ['$price', {$subtract: ['$price', {$divide:[{ $multiply:[{$subtract:[100,{$add: [0, { $ifNull: ['$catofferper', 0]   } ]} ]},'$price']},100]}]}]},{$subtract: ['$price', {$divide: [{$multiply: [{$subtract: [100, {$add: [0, { $ifNull: ['$offerper', 0] }]}]},'$price']},100]}]}]}, // $divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
+else  : '$price'
+
+}
+}}}]).toArray();
+resolve(products[0])
+})
+},
     updateOffer: (offer, proid) => {
-        console.log("kk")
+        //console.log("kk")
         oferamt = parseInt((100 - offer.offer) * offer.price / 100)
         oferper = parseInt(offer.offer)
-        console.log("kk")
+        //console.log("kk")
         return new Promise((resolve, reject) => {
 
             db.get().collection(collection.PRODUCT_COLLECTIOS).updateOne({
@@ -713,7 +647,8 @@ var objectId = require('mongodb').ObjectId
             resolve(refamount[0])
             
          })
-    }
+    },
+    
 
 
 }
