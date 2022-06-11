@@ -95,18 +95,18 @@
                     <input min="1" id="{{this.product._id}}" name="quantity" value="{{this.quantity}}" type="text"
                       class="form-control text-center " style="width: 5rem;" disabled="" />
                     <label class="form-label" for="form1">
-                      
-                  {{#if this.product.status}}
-                  {{!-- <strong>&#x20B9; {{this.product.oferamt}}</strong>
-                  {{else}}
-                  <strong>&#x20B9; {{this.product.price}}</strong> --}}
-                  <strong>&#x20B9; {{this.total}}</strong>
-                  {{else}}
-                  <strong>&#x20B9; {{this.total}}</strong>
-                  {{/if}}
-                
-                      
-                   </label>
+
+                      {{#if this.product.status}}
+                      {{!-- <strong>&#x20B9; {{this.product.oferamt}}</strong>
+                      {{else}}
+                      <strong>&#x20B9; {{this.product.price}}</strong> --}}
+                      <strong>&#x20B9; {{this.total}}</strong>
+                      {{else}}
+                      <strong>&#x20B9; {{this.total}}</strong>
+                      {{/if}}
+
+
+                    </label>
                   </div>
 
                   {{!-- <button class="btn btn-primary px-2 ms-1 " style="height: 2.4rem;"
@@ -117,7 +117,7 @@
                 <!-- Quantity -->
 
                 <!-- Price -->
-               
+
                 <!-- Price -->
 
 
@@ -178,13 +178,14 @@
           <span class="text-muted">ORDEER SUMMARY</span>
           <span class="badge badge-secondary badge-pill">3</span>
         </h4>
-
+ 
         {{#if user.Wallet}}
         <div class="alert alert-success">
           <strong>Pay Using Jasmin Wallet ! </strong>
-
-          <div><input class="form-check-input text-primary" type="checkbox" {{cartItem.[0].Wallet}} id="flexCheckDefault"
-              onclick="return wallet('{{user._id}}','{{user.Wallet}}')"> <strong class="text-primary">Available Balance :&#x20B9;
+         
+          <div><input class="form-check-input text-primary" type="checkbox" {{cartItem.[0].Wallet}}
+              id="flexCheckDefault" onclick="return wallet('{{user._id}}','{{user.Wallet}}')"> <strong
+              class="text-primary">Available Balance :&#x20B9;
               {{user.Wallet}} </strong> </div>
 
         </div>
@@ -322,24 +323,27 @@
 
               <div class="d-block my-1">
                 <div class="custom-control custom-radio">
-                  <input id="credit" name="paymentMethod" value="razorpay" type="radio" class="custom-control-input"
-                    checked >
-                  <label class="custom-control-label" for="credit">Razor Pay</label>
-                </div>
-                <div class="custom-control custom-radio">
-                  <input id="cod" name="paymentMethod" type="radio" value="COD" class="custom-control-input">
+                  <input id="cod" name="paymentMethod" type="radio" value="COD" class="custom-control-input" checked>
                   <label class="custom-control-label" for="cod">C O D</label>
                 </div>
+                <div class="custom-control custom-radio">
+                  <input id="credit" name="paymentMethod" value="razorpay" type="radio" class="custom-control-input"
+                    >
+                  <label class="custom-control-label" for="credit">Razor Pay</label>
+                </div>
+                
                 <div class="custom-control custom-radio">
                   <input id="paypal" name="paymentMethod" type="radio" value="paypal" class="custom-control-input">
                   <label class="custom-control-label" for="paypal">Pay-pal</label>
                 </div>
               </div>
 
+              <div id="payment">
+                 <hr class="mb-4">
+                <button class="btn btn-primary bg-primary btn-lg btn-block text-info" id="ss" type="submit"
+                  >CHECKOUT</button>
+              </div>
 
-              <hr class="mb-4">
-              <button class="btn btn-primary bg-primary btn-lg btn-block text-info" type="submit"
-                id="rzp-button1">CHECKOUT</button>
 
 
             </form>
@@ -367,6 +371,22 @@
 {{!-- <button id="rzp-button1">Pay</button> --}}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+  $("input[name='paymentMethod']").click(function () {
+    divdata=document.getElementById('payment');
+    
+    if ($(this).val() === 'razorpay') {
+     divdata.innerHTML=`<hr class="mb-4">
+                <button class="btn btn-primary bg-primary btn-lg btn-block text-info" type="submit"
+                  id="rzp-button1">CHECKOUT</button>`
+    }
+    else {
+divdata.innerHTML=`<hr class="mb-4">
+                <button class="btn btn-primary bg-primary btn-lg btn-block text-info" type="submit"
+                  >CHECKOUT</button>`
+    }
+
+  });
+
   $("#checkout-form").submit((e) => {
 
     e.preventDefault();
@@ -449,7 +469,7 @@
   }
 
   function verifyPayment(payment, order, body) {
-    console.log(order)
+   
     $.ajax({
       url: '/verify-payment',
       data: {
@@ -473,7 +493,7 @@
     })
   }
 
-  function wallet(id,wallet) {
+  function wallet(id, wallet) {
     if (document.getElementById('flexCheckDefault').checked) {
 
 
@@ -481,12 +501,12 @@
         url: '/wallet',
         data: {
           userid: id,
-          wallet:wallet
+          wallet: wallet
         },
         method: 'post',
         success: (response) => {
 
-
+          location.reload()
 
 
         }
@@ -495,6 +515,20 @@
     }
     else {
       //alert('dd')
+        $.ajax({
+        url: '/walletremove',
+        data: {
+          userid: id,
+          wallet: wallet
+        },
+        method: 'post',
+        success: (response) => {
+
+          location.reload()
+
+
+        }
+      })
     }
 
 

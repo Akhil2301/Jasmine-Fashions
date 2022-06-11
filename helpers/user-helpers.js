@@ -6,6 +6,7 @@ var objectId = require('mongodb').ObjectId
 var instance = new Razorpay({key_id: 'rzp_test_Vldb0EmPlRSPUM', key_secret: 'jh7UxH26ViUIDmlsgLWvc7Ee'});
 
 const paypal = require('paypal-rest-sdk');
+const { Console } = require('console');
 
 paypal.configure({
     'mode': 'sandbox', // sandbox or live
@@ -146,7 +147,7 @@ module.exports = {
             let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({user: objectId(userId)})
             if (userCart) {
                 let proExist = userCart.products.findIndex(product => product.item == prodId)
-                console.log(proExist);
+                //console.log(proExist);
 
                 if (proExist != -1) {
                     db.get().collection(collection.CART_COLLECTION).updateOne({
@@ -329,8 +330,6 @@ module.exports = {
                 couponstatus:1,
                 couponName:1,
                 coupon:1,
-                wallet:1,
-                walletamt:1,
             }
 
         },
@@ -348,12 +347,9 @@ module.exports = {
                 couponstatus:1,
                 couponName:1,
                 coupon:1,
-                wallet:1,
-                walletamt:1,
                 product: {
                     $arrayElemAt: ['$product', 0]
-                },
-               
+                }
             }
 
         }, {
@@ -399,7 +395,7 @@ module.exports = {
 
 
     ]).toArray()
-   console.log(total[0].total)
+   //console.log(total[0].total)
     resolve(total[0].total);
 }
  catch(e)  {
@@ -554,9 +550,12 @@ module.exports = {
 
         })
     },
-    placeOrder: (order, products, total) => {
+    placeOrder: (order, products, total,walletupdate,wall) => {
         
-        //console.log('ggaghscod')
+        
+
+       // console.log(walletupdate)
+        //if(walletupdate){}
         return new Promise(async (resolve, reject) => {
             let orderObj = {
                 deliveryDetails: {
@@ -568,7 +567,8 @@ module.exports = {
                 paymentMethod: order.paymentMethod,
                 products: products,
                 totalAmount: total,
-                reciept:order.receipt,
+                Walletpay:walletupdate,
+                receipt:order.receipt,
                 status: {
                     placed: true,
                     cancel: false,
@@ -581,28 +581,48 @@ module.exports = {
             }
 
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
-                db.get().collection(collection.CART_COLLECTION).deleteOne({
-                    user: objectId(order.userId)
+               
+                db.get().collection(collection.USER_COLLECTION).updateOne({
+                    _id: objectId(order.userId)
+    
+                }, {
+                    $set: {
+                        
+                        Wallet: wall
+                        
+                    }
+                }).then((resp) => {
+                    db.get().collection(collection.CART_COLLECTION).deleteOne({
+                        user: objectId(order.userId)
+                    })
                 })
+
+
+
+                
+
+
                 resolve(response)
             })
 
         })
     }, 
-    placeOrderrazor: (order, products, total) => {
-       console.log(order['body[phone]'])
+        
+    placeOrderrazor: (order, products, total,walletupdate,wall) => {
+       
         return new Promise(async (resolve, reject) => {
             let orderObj = {
                 deliveryDetails: {
-                    phone: order['body[phone]'],
-                    address: order['body[address]'],
-                    zip: order['body[zip]']
+                    phone: order.body.phone,
+                    address: order.body.address,
+                    zip: order.body.zip
                 },
-                userId: objectId(order['body[userId]']),
-                paymentMethod: order['order[data][paymentMethod]'],
+                userId: objectId(order.body.userId),
+                paymentMethod: order.body.paymentMethod,
                 products: products,
                 totalAmount: total,
-                receipt:parseInt(order['order[data][receipt]']),
+                Walletpay:walletupdate,
+                receipt:parseInt(order.body.receipt),
                 status: {
                     placed: true,
                     cancel: false,
@@ -615,18 +635,32 @@ module.exports = {
             }
 
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
-                db.get().collection(collection.CART_COLLECTION).deleteOne({
-                    user: objectId(order['body[userId]'])
+                db.get().collection(collection.USER_COLLECTION).updateOne({
+                    _id: objectId(order.body.userId)
+    
+                }, {
+                    $set: {
+                        
+                        Wallet: wall
+                        
+                    }
+                }).then((resp) => {
+                    db.get().collection(collection.CART_COLLECTION).deleteOne({
+                        user: objectId(order.body.userId)
+                    })
                 })
+
+
+               
                 resolve(response)
             })
 
         })
     },
 
-    placeOrderpaypal: (order, products, total) => {
+    placeOrderpaypal: (order, products, total,walletupdate,wall) => {
        
-       // console.log(order)
+       //console.log(order)
         return new Promise(async (resolve, reject) => {
             let orderObj = {
                 deliveryDetails: {
@@ -638,6 +672,7 @@ module.exports = {
                 paymentMethod: order.orderdata.paymentMethod,
                 products: products,
                 totalAmount: total,
+                Walletpay:walletupdate,
                 receipt:parseInt(order.orderdata.receipt),
                 status: {
                     placed: true,
@@ -651,9 +686,26 @@ module.exports = {
             }
 
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
-                db.get().collection(collection.CART_COLLECTION).deleteOne({
-                    user: objectId(order.userId)
+               
+                db.get().collection(collection.USER_COLLECTION).updateOne({
+                    _id: objectId(order.userId)
+    
+                }, {
+                    $set: {
+                        
+                        Wallet: wall
+                        
+                    }
+                }).then((resp) => {
+                    db.get().collection(collection.CART_COLLECTION).deleteOne({
+                        user: objectId(order.userId)
+                    })
                 })
+
+
+
+
+               
                 resolve(response)
             })
 
@@ -661,12 +713,129 @@ module.exports = {
     },
     getOrderList: (userId) => {
         return new Promise(async (resolve, reject) => {
-            let orders = await db.get().collection(collection.ORDER_COLLECTION).find({userId: objectId(userId)}).toArray()
+            // let orders = await db.get().collection(collection.ORDER_COLLECTION).find({userId: objectId(userId)}).sort({_id:-1}).toArray()
+            let orders = await db.get().collection(collection.ORDER_COLLECTION).
+            aggregate([
+                {$match:{userId: objectId(userId)}},
+                {
+                    "$project": {
+                        "dats":"$dat"
+                          ,
+                        "dat": {
+                            "$dateToString": {
+                                "format": "%Y-%m-%d",
+                                "date": "$dat"
+                            }
+                        },
+                        "_id": 1,
+                        "deliveryDetails": 1,
+                        "userId": 1,
+                        "paymentMethod": 1,
+                        "products": 1,
+                        "totalAmount": 1,
+                        "status": 1
 
+                    }
+                }
+            ]).sort({dats:-1}).toArray()
             resolve(orders)
 
         })
     },
+    
+    getOrderDetail: (orderId,userId) => {
+        return new Promise(async (resolve, reject) => {
+            let orderItem = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match:{_id:objectId(orderId)}
+                },
+                {
+                    $match:{userId:objectId(userId)}
+                },
+                {$unwind:'$products'},
+                {$unwind:'$status'},
+                
+                {
+                  $project:{
+                    item:'$products.item',
+                    quantity:'$products.quantity',
+                    Walletpay:1,
+                    totalAmount:1,
+                    receipt:1,
+                    dat:1,
+                    status:1
+                  }
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTIOS,
+                        localField: 'item',
+                        foreignField: '_id',
+                        as: 'product'
+                    }
+                },
+                {$project:{
+
+                                        
+                  
+                    quantity:1,
+                    product:{$arrayElemAt: ['$product', 0]},
+                    receipt:1,
+                    totalAmount:1,
+                    Walletpay:1,
+                    dat:1,
+                    status:1
+                } 
+                },
+                {
+                    $unwind:'$product'
+                },
+                {
+                    $project:{
+                        item: 1,
+                        quantity: 1,
+                        product:1,
+                        totalAmount:1,
+                        receipt:1,
+                        Walletpay:1, 
+                        "dat": {
+                            "$dateToString": {
+                                "format": "%Y-%m-%d",
+                                "date": "$dat"
+                            }
+                        },
+                        status:1,
+
+                        total:{
+                              
+                       
+                  
+                            $cond: {
+                                // if : {$eq:['$product.catoffstatus',true]},
+                                // then:{$subtract:[{$subtract:['$product.price',{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,'$product.catofferper']},'$product.price']},100]}]}]},{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,'$product.offerper']},'$product.price']},100]}]}]},//$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
+                                // else:'$product.price' 
+                                if : {$or:[{$eq:['$product.catoffstatus',true]},{$eq:['$product.status',true]}]} ,
+                                then:{$subtract:[{$subtract:['$product.price',{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,{$add:[0,{$ifNull:['$product.catofferper',0]}]}]},'$product.price']},100]}]}]},{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,{$add:[0,{$ifNull:['$product.offerper',0]}]}]},'$product.price']},100]}]}]},//$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
+                                else:'$product.price'  
+    
+                                
+    
+                          } 
+                        }
+                    }
+                }
+
+
+            ]).toArray();
+            
+            resolve(orderItem)
+        })
+
+
+    },
+
+
+
     updateProfile: (prodid, userDetails) => {
         return new Promise((resolve, reject) => {
 
@@ -692,6 +861,8 @@ module.exports = {
             })
         })
     },
+
+    
 
     updateOrderStaus: (proid) => {
 
@@ -771,7 +942,7 @@ module.exports = {
         })
     },
     generateRazorpay: (orderId, totalPrice) => {
-        console.log(orderId)
+        //console.log(orderId)
         return new Promise((resolve, reject) => {
             //console.log(orderId)
 
@@ -845,12 +1016,14 @@ module.exports = {
 
 
     verifyPayment: (details) => {
+        //console.log(details)
         return new Promise((resolve, reject) => {
             const crypto = require('crypto');
             let hmac = crypto.createHmac('sha256', 'jh7UxH26ViUIDmlsgLWvc7Ee')
-            hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]'])
+            hmac.update(details.payment.razorpay_order_id + '|' + details.payment.razorpay_payment_id)
             hmac = hmac.digest('hex')
-            if (hmac == details['payment[razorpay_signature]']) {
+            if (hmac == details.payment.razorpay_signature) {
+               // console.log(details)
                 resolve()
             } else {
                 reject()
@@ -878,8 +1051,8 @@ module.exports = {
             })
         })
     }, 
-    profilePicChange: ((user,image) => {
-        console.log('user')
+    profilePicChange:((user,image) => {
+        //console.log('user')
         return new Promise(async (resolve, reject) => {
            db.get().collection(collection.USER_COLLECTION).updateOne({ _id: objectId(user) },{
                $set:{photo:image}
@@ -892,12 +1065,17 @@ module.exports = {
 
     razorrecipt:()=>{
         return new Promise(async (resolve, reject) => {
-        let receipt=await db.get().collection(collection.ORDER_COLLECTION).find({},{_id:0,receipt:1}).sort({_id:-1}).limit(1).toArray()
-            
-        resolve(receipt[0])
+        let recipt=await db.get().collection(collection.ORDER_COLLECTION).find({},{_id:0,receipt:1}).sort({_id:-1}).limit(1).toArray()
+        //console.log(recipt[0])
+        if (recipt[0]===undefined){
+            resolve(0)
+        }
+        else{
+            resolve(recipt[0].receipt)
+        }
          
-        
- //console.log(receipt)
+       
+ 
         })
     },
 
@@ -979,11 +1157,11 @@ module.exports = {
                  // console.log(response)
                 
                 if (response.length == 0){
-                    console.log('dd')
+                   // console.log('dd')
                     resolve({ status: true })
                 }
                 else {
-                    console.log('fd')
+                    //console.log('fd')
                     resolve({ usedStatus: true })
                 }
             }).catch((e)=>{
@@ -1058,7 +1236,7 @@ module.exports = {
                     })
 
                 } else {
-                    console.log('no coupon  ss');
+                    //console.log('no coupon  ss');
                     resolve({ status: false })
                 }
 
@@ -1070,7 +1248,7 @@ module.exports = {
 
             }
             else {
-                console.log('no coupon dd');
+                //console.log('no coupon dd');
                 resolve({ status: false })
             }
 
@@ -1193,7 +1371,7 @@ module.exports = {
     },
     removecoupnid: (id,coupid) => {
 
-        console.log(coupid)
+        //console.log(coupid)
         
         return new Promise(async (resolve, reject) => {
                
@@ -1264,8 +1442,27 @@ module.exports = {
     },
 
 
+    walletremove:(data)=>{
+        //console.log(data.userid)
+        return new Promise((resolve, reject) => {
+
+            db.get().collection(collection.CART_COLLECTION).updateOne({
+                user: objectId(data.userid)
+            }, {
+                $unset: { wallet: "",walletamt:"" }
+            }).then((response) => {
+                resolve({status:true})
+            })
+        })
+        
+
+    },
+
+    
+
+
     cartItem:(userId)=>{
-        console.log(userId)
+        //console.log(userId)
         return new Promise(async (resolve, reject) => {
             let cartItem = await db.get().collection(collection.CART_COLLECTION).aggregate([
                 {
@@ -1277,7 +1474,7 @@ module.exports = {
                     item:'$products.item',
                     quantity:'$products.quantity',
                     wallet:1,
-                   
+                    walletamt:1,
                   }
                 },
                 {
@@ -1295,6 +1492,7 @@ module.exports = {
                     coupon:1,
                     couponccode:1,                      
                     wallet:1,
+                    walletamt:1,
                     quantity:1,
                     product:{$arrayElemAt: ['$product', 0]}
                 } 
@@ -1311,7 +1509,7 @@ module.exports = {
                         couponName:1,
                         coupon:1,
                         couponccode:1,
-                          
+                        walletamt:1, 
                         wa:"$wallet",
                         Wallet:
                         {
@@ -1343,7 +1541,7 @@ module.exports = {
 
 
             ]).toArray();
-           // console.log(cartItem)
+           //console.log(cartItem)
             resolve(cartItem)
         })
 

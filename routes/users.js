@@ -149,7 +149,7 @@ router.post('/signup', async (req, res) => {
 
 
     } else {
-        console.log('error')
+        //console.log('error')
         res.render('user/signup', {err_msg: 'Enter Every field Properly'})
 
     }
@@ -234,6 +234,7 @@ router.get('/cart', verifyLogin, cartcnt, async (req, res) => {
     // console.log(products)
     if (! products[0]) {
         totalamount = 0
+        totalamtwithotcoupon=0
         checks = true
     } else {
         totalamount = await userHelper.getTotalAmount(req.session.user._id)
@@ -322,18 +323,35 @@ router.post('/remove-product', verifyLogin, cartcnt, (req, res, next) => {
 
 /*******************place order ********** */
 router.post('/place-orders', verifyLogin, cartcnt, async (req, res) => {
-    console.log(req.body.selectAddress)
+    //console.log(req.body.selectAddress)
     // const addressid=req.body.addressid
     let cartItem=await userHelpers.cartItem(req.session.user._id)
+    let user = await userHelper.getUsertDetails(req.session.user._id)
     cartCount = req.session.cartCount
-    let totalamount = await userHelper.getTotalAmount(req.session.user._id)
+    let total_amount = await userHelper.getTotalAmount(req.session.user._id)
+    
+    if(cartItem[0].Wallet=='checked'){
+        
+       if(total_amount<=cartItem[0].walletamt){
+        totalamount=1
+       }
+       else{
+        totalamount=total_amount-cartItem[0].walletamt
+       }
+
+    }
+    else{
+        totalamount=total_amount
+    }
+   
+   
     let address = await userHelper.getAddressbyid(req.body.selectAddress)
 
     address._id = address._id.toString()
     res.render('user/checkout', {
         totalamount,
         cartCount,
-        user: req.session.user,
+         user,
         address,
         cartItem
     })
@@ -346,63 +364,57 @@ router.post('/place-orders', verifyLogin, cartcnt, async (req, res) => {
 
 router.post('/place-order', verifyLogin, async (req, res) => {
 
-    // let products = await userHelper.getCartProductList(req.body.userId)
-    // let totalPrice = await userHelper.getTotalAmount(req.body.userId)
-    // userHelper.placeOrder(req.body, products, totalPrice).then((response) => {
-    //     return new Promise((resolve, reject) => {
-    //         let orderId = response.insertedId
-    //         req.session.orderId = orderId
-    //         if (req.body['paymentMethod '] == 'COD') {
-    //             res.json({codsuccess: true})
-    //         } else if (req.body['paymentMethod'] == 'razorpay') {
-
-    //             userHelper.generateRazorpay(orderId, totalPrice).then((response) => {
-    //                 res.json(response)
-
-    //             })
-
-    //         } else {
-    //             userHelpers.generatePaypal(orderId, totalPrice).then((data) => {
-
-    //                 response.data = data
-    //                 response.paypal = true
-
-    //                 res.json(response)
-
-
-    //             })
-    //         }
-
-    //     })
-    // })
-
+    let cartItem=await userHelpers.cartItem(req.body.userId)
     let products = await userHelper.getCartProductList(req.body.userId)
-    let totalPrice = await userHelper.getTotalAmount(req.body.userId)
+    let total_Price = await userHelper.getTotalAmount(req.body.userId)
+    
+    let user = await userHelper.getUsertDetails(req.body.userId)
+    
+    if(cartItem[0].Wallet=='checked'){
+        
+       if(total_Price<=cartItem[0].walletamt){
+        totalPrice=1
+        wall=cartItem[0].walletamt-total_Price+1
+        //console.log(cartItem[0].walletamt-walletupdate)
+        walletupdate=cartItem[0].walletamt-wall
+       }
+       else{
+        totalPrice=total_Price-cartItem[0].walletamt
+        
+        walletupdate=user.Wallet
+        wall=0
+       }
+
+    }
+
+    else{
+        totalPrice=total_Price
+        walletupdate=0;
+        wall=user.Wallet
+    }
+//console.log(wall)
+ 
+     
     orderrec = await userHelper.razorrecipt()
-    // console.log(orderrec)
-    // console.log(orderrec.receipt)
-    // console.log(req.body.userId)
-    // orderId=orderrec.receipt
+    
     if (orderrec != undefined) {
-        orderId = orderrec.receipt
+        
+        orderId = orderrec
         req.body.receipt = parseInt(orderId) + parseInt(1)
         // console.log(orderId +"ss")
-    } else {
+    } else { 
         orderId = 1
         req.body.receipt = parseInt(orderId)
     }
-    // req.body.receipt=parseInt(orderId)+parseInt(1)
-    // console.log(req.body.receipt)
-    // console.log('hh')
-    //    req.body['paymentMethod '] == 'COD'
+    
     if (req.body.paymentMethod == 'COD') { // console.log(req.body)//return new Promise((resolve, reject) => {
-        userHelper.placeOrder(req.body, products, totalPrice).then((response) => {
+        userHelper.placeOrder(req.body, products, totalPrice,walletupdate,wall).then((response) => {
             res.json({codsuccess: true})
         })
 
     } else if (req.body.paymentMethod == 'razorpay') {
 
-        userHelper.generateRazorpay(orderId, totalPrice).then((response) => {
+        userHelper.generateRazorpay(orderId, totalPrice,walletupdate,wall).then((response) => {
             response.data = req.body
             // console.log(response.data)
             res.json(response)
@@ -411,12 +423,9 @@ router.post('/place-order', verifyLogin, async (req, res) => {
         })
 
     } else {
-        userHelper.generatePaypal(products, totalPrice, req.body).then((response) => {
-            // response.data = req.body
-            // response.data = response
-
-            // console.log(response.data)
-
+        userHelper.generatePaypal(products, totalPrice, req.body,walletupdate,wall).then((response) => {
+            
+         
 
             response.paypal = true
 
@@ -433,9 +442,42 @@ router.post('/place-order', verifyLogin, async (req, res) => {
 router.get('/success/:id/:addressid', cartcnt, verifyLogin, async (req, res) => {
     // res.json(response)
     // console.log("hi paypal")
+    let cartItem=await userHelpers.cartItem(req.params.id)
+
     let products = await userHelper.getCartProductList(req.params.id)
-    let totalPrice = await userHelper.getTotalAmount(req.params.id)
+    //let totalPrice = await userHelper.getTotalAmount(req.params.id)
     let address = await userHelper.getAddressbyid(req.params.addressid)
+    let total_Price = await userHelper.getTotalAmount(req.params.id)
+    
+    let user = await userHelper.getUsertDetails(req.params.id)
+    //console.log(cartItem)
+    if(cartItem[0].Wallet=='checked'){
+        
+       if(total_Price<=cartItem[0].walletamt){
+        totalPrice=1
+        wall=cartItem[0].walletamt-total_Price+1
+        //console.log(cartItem[0].walletamt-walletupdate)
+        walletupdate=cartItem[0].walletamt-wall
+       }
+       else{
+        totalPrice=total_Price-cartItem[0].walletamt
+        
+        walletupdate=user.Wallet
+        wall=0
+       }
+
+    }
+    else{
+        totalPrice=total_Price
+        walletupdate=0;
+        wall=user.Wallet
+    }
+
+
+
+
+
+
     let orderdata = req.query
     // console.log(orderdata)
     let order = {
@@ -443,7 +485,7 @@ router.get('/success/:id/:addressid', cartcnt, verifyLogin, async (req, res) => 
         orderdata
     }
     // console.log(order)
-    userHelper.placeOrderpaypal(order, products, totalPrice).then((response) => { // res.json({codsuccess: true})
+    userHelper.placeOrderpaypal(order, products, totalPrice,walletupdate,wall).then((response) => { // res.json({codsuccess: true})
         res.redirect('/order-success')
     })
     // console.log(req.params.id)
@@ -465,8 +507,20 @@ router.get('/order-success', cartcnt, verifyLogin, (req, res) => {
 router.get('/orders', cartcnt, verifyLogin, async (req, res) => {
     cartCount = req.session.cartCount
     let orders = await userHelper.getOrderList(req.session.user._id)
-    console.log(req.session.user._id)
+   // console.log(req.session.user._id)
     res.render('user/order-success', {
+        user: req.session.user,
+        cartCount,
+        orders,
+        status: 'false'
+    })
+})
+
+router.get('/orderdetail/:id', cartcnt, verifyLogin, async (req, res) => {
+    cartCount = req.session.cartCount
+    let orders = await userHelper.getOrderDetail(req.params.id,req.session.user._id)
+     console.log(orders[0].status.placed)
+    res.render('user/order-detail', {
         user: req.session.user,
         cartCount,
         orders,
@@ -580,24 +634,62 @@ router.post('/changepass', cartcnt, verifyLogin, (req, res) => {
 
 router.post('/verify-payment', verifyLogin, cartcnt, async (req, res) => {
     // console.log(req.body)
-    // console.log(req.body)
-    let products = await userHelper.getCartProductList(req.body['order[data][userId]'])
-    let totalPrice = await userHelper.getTotalAmount(req.body['order[data][userId]'])
+     //console.log(req.body.order.data.userId)
+     let cartItem=await userHelpers.cartItem(req.body.order.data.userId)
+    let products = await userHelper.getCartProductList(req.body.order.data.userId)
+    let total_Price = await userHelper.getTotalAmount(req.body.order.data.userId)
+    let user = await userHelper.getUsertDetails(req.body.order.data.userId)
+    
+    if(cartItem[0].Wallet=='checked'){
+        
+       if(total_Price<=cartItem[0].walletamt){
+        totalPrice=1
+        wall=cartItem[0].walletamt-total_Price+1
+        //console.log(cartItem[0].walletamt-walletupdate)
+        walletupdate=cartItem[0].walletamt-wall
+       }
+       else{
+        totalPrice=total_Price-cartItem[0].walletamt
+        
+        walletupdate=user.Wallet
+        wall=0
+       }
 
+    }
+    else{
+        totalPrice=total_Price
+        walletupdate=0;
+        wall=user.Wallet
+    }
+    //console.log(user.Wallet)
+    orderrec = await userHelper.razorrecipt()
+   // console.log(orderrec)
+    if (orderrec != undefined) {
+        
+        orderId = parseInt(orderrec) + parseInt(1)
+       // req.body.receipt = parseInt(orderId) + parseInt(1)
+        // console.log(orderId +"ss")
+    } else { 
+        orderId = 1
+        //req.body.receipt = parseInt(orderId)
+    }
+
+    //console.log(wall)
     userHelper.verifyPayment(req.body).then(() => {
-
-        // console.log(req.body)
-        // console.log(req.body['order[data][userId]'])
+        
+        
         let data = req.body
+        req.body.receipt=orderId
         // console.log(req.body['order[data]'])
-        userHelper.placeOrderrazor(data, products, totalPrice).then((response) => { // res.json({codsuccess: true})
+        userHelper.placeOrderrazor(data, products, totalPrice,walletupdate,wall).then((response) => { // res.json({codsuccess: true})
 
-            order_Id = response.insertedId
-            userHelpers.changePaymentStatus(order_Id).then(() => {
-
+             //response.insertedId
+            
+            //userHelpers.changePaymentStatus(order_Id).then(() => {
+               
                 res.json({status: true})
 
-            })
+           // })
 
         })
     }).catch((err) => {
@@ -629,7 +721,7 @@ router.post('/crop-images', (req, res) => { // console.log("ggg")
 router.post('/applycoupon',cartcnt, verifyLogin, async (req, res) => { // console.log(req.body)
     let coupon = await userHelper.getCartcoupon(req.body.enteredcoupon)
     let coupondata=await userHelper.getCartcoupondata_use(req.body.userid)
- console.log(req.body.userid)
+ //console.log(req.body.userid)
     if (coupon != undefined && coupondata==0 ) {
 
         userHelpers.checkUsedCoupon(req.body).then((response) => {
@@ -663,7 +755,7 @@ router.post('/applycoupon',cartcnt, verifyLogin, async (req, res) => { // consol
 
 router.post('/removeCoupon',cartcnt, verifyLogin, (req, res) => { // console.log((req.body));
     userHelpers.removeCoupon(req.body.userid, req.body.coupid).then(async (response) => {
-        console.log('dd dff')
+        
         userHelpers.removecoupnid(req.body.userid, req.body.coupid).then(async (response) => {
             res.json({status: true})
         })
@@ -675,7 +767,7 @@ router.post('/removeCoupon',cartcnt, verifyLogin, (req, res) => { // console.log
 router.get('/referalcode',cartcnt, verifyLogin,async (req, res) => {
     cartCount = req.session.cartCount
     let referalamount=await productHelpers.refamount()
-    console.log(referalamount)
+    //console.log(referalamount)
     let user = await userHelper.getUsertDetails(req.session.user._id)
        res.render('user/referalcode', {
         user: user,
@@ -689,7 +781,7 @@ router.post('/getcoupon',cartcnt, verifyLogin,async (req, res) => {
    // cartCount = req.session.cartCount
    
    let coupon = await userHelper.getCartcoupondata(req.body.userid)
-   console.log(coupon)
+//console.log(coupon)
    if (coupon){
     res.json(coupon)
    }
@@ -700,13 +792,18 @@ router.post('/getcoupon',cartcnt, verifyLogin,async (req, res) => {
 })
 
 router.post('/wallet',cartcnt, verifyLogin,async (req, res) => {
-    // cartCount = req.session.cartCount
- 
-  
-   // console.log('re')
-    //console.log(req.body)
-   //console.log('re')
+   
     userHelpers.walletApply(req.body).then((response) => { // console.log(response);
+        res.json(response)
+    })
+ 
+    
+ })
+
+
+ router.post('/walletremove',cartcnt, verifyLogin,async (req, res) => {
+   
+    userHelpers.walletremove(req.body).then((response) => { // console.log(response);
         res.json(response)
     })
  
