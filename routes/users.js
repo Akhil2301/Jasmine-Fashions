@@ -251,6 +251,7 @@ router.get('/cart', verifyLogin, cartcnt, async (req, res) => {
     // console.log(totalamount)
 
     let address = await userHelper.getAddress(req.session.user._id)
+    console.log(address)
     res.render('user/cart', {
         products,
         users: req.session.user._id,
@@ -274,6 +275,9 @@ router.get('/add-address', cartcnt, verifyLogin, async (req, res) => {
 
 
 })
+
+
+
 
 /*******************adress form end ********** */
 
@@ -301,6 +305,56 @@ router.post('/add-address', cartcnt, verifyLogin, (req, res) => {
 
 
 })
+
+router.get('/Edit-Address/:addreessId', cartcnt, verifyLogin, async(req, res) => {
+    cartCount = req.session.cartCount
+    let user = req.session.user
+    let address = await userHelper.getAddressbyid(req.params.addreessId)
+    
+    res.render('user/edit-address',{
+        cartCount,
+        user,
+        address
+    })
+
+})
+
+router.get('/delete-Address/:id', verifyLogin, async (req, res) => {
+
+    userHelper.deleteAddress(req.params.id).then((response) => {
+
+        res.redirect('/address');
+
+    })
+
+})
+
+
+
+router.post('/Edit-Address/:addreessId', cartcnt, verifyLogin, (req, res) => {
+
+    userHelper.updateAddress(req.params.addreessId,req.body).then((response)=>{
+        res.redirect('/address')
+    })
+
+})
+
+
+/*** add address Userpage */
+router.post('/add-addressuser', cartcnt, verifyLogin, (req, res) => {
+
+    userHelper.addadress(req.body).then(async (response) => {
+        cartCount = req.session.cartCount
+        
+
+        let address = await userHelper.getAddress(req.session.user._id)
+        res.redirect('/address')
+    })
+
+
+})
+
+/*  add address Userpage end  */
 
 /*******************adress form end ********** */
 

@@ -1545,7 +1545,48 @@ module.exports = {
             resolve(cartItem)
         })
 
-    }
+    },
+
+    
+
+
+    updateAddress:(addressId,Address)=>{
+
+        
+
+        if (Address.check=='checked'){
+            chekeddata='checked'
+        }else{
+            chekeddata= 'uncheked'
+        }
+        return new Promise((resolve, reject) => {
+
+            db.get().collection(collection.USER_ADDRESS_COLLECTION).updateOne({
+                _id: objectId(addressId)
+            }, {
+                $set: {
+                    address: Address.address,
+                    city:Address.city,
+                    zip:Address.zip,
+                    saveaddress:Address.saveaddress,
+                    check:chekeddata,
+                    userId:Address.userId
+                }
+            }).then((response) => {
+                resolve(response)
+            })
+        })
+    },
+    deleteAddress: (Addressid) => {
+        return new Promise((resolve, reject) => {
+
+            db.get().collection(collection.USER_ADDRESS_COLLECTION).remove({_id: objectId(Addressid)}).then((response) => {
+                resolve(response)
+            })
+        })
+
+
+    },
 
 
 

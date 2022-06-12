@@ -91,7 +91,8 @@
           </div>
           <div class="col-8">
             <div class="d-flex flex-row align-items-center mt-3 mx-2 p-2 bg-white rounded">
-              <input type="text" class="form-control border-1 gift-card col-8 " id="coupon" placeholder="Enter Coupon code">
+              <input type="text" class="form-control border-1 gift-card col-8 " id="coupon"
+                placeholder="Enter Coupon code">
               <button class="btn btn-outline-warning btn-xxl mx-2 ml-2" type="button"
                 onclick="applyCoupon('{{user._id}}')">Apply</button>
               {{!-- <button class="btn btn-outline-warning btn-xxl mx-2 ml-2" type="button">remove</button> --}}
@@ -193,10 +194,10 @@
                   <div>
 
                     <button class="btn btn-sm mx-2 border-0" type="button" id="removebtn"
-                    
-                      onclick="removeCoupon(event,'{{user._id}}','{{products.[0].couponccode}}')"> <span style="color:rgb(8, 15, 212) ;">Remove
+                      onclick="removeCoupon(event,'{{user._id}}','{{products.[0].couponccode}}')"> <span
+                        style="color:rgb(8, 15, 212) ;">Remove
                     </button>
-                  
+
                   </div>
                   </p>
                 </div>
@@ -291,8 +292,13 @@
                               </div>
                             </div>
                             <div class="action">
-                              <a href="#" class="deleteAddress">Delete</a>
-                              <a href="#" class="editAddress">Edit</a>
+                              {{!-- <a href="#" class="deleteAddress">Delete</a>
+                              <a href="#" class="editAddress">Edit</a> --}}
+
+
+                              <span> <a class="" href="/Edit-Address/{{_id}}">Edit</a>
+                                <a class="" href="/delete-Address/{{_id}}">Delete</a>
+                              </span>
                             </div>
                           </div>
                           {{/each}}
@@ -394,8 +400,8 @@
 
 
     let coupon = document.getElementById('coupon').value
-   
-    if (coupon == '' || coupon.length<12) {
+
+    if (coupon == '' || coupon.length < 12) {
       swal({
         title: "Enter Exact Coupon Code",
         text: "",
@@ -465,9 +471,9 @@
   }
 
 
-  function removeCoupon(ev, id,coupid) {
+  function removeCoupon(ev, id, coupid) {
 
-    
+
     var urlToRedirect = ev.currentTarget.getAttribute('href');
 
     swal({
@@ -482,23 +488,23 @@
         if (willDelete) {
 
 
-          
+
 
           $.ajax({
             url: '/removeCoupon',
             data: {
-              userid:id,
-              coupid:coupid
+              userid: id,
+              coupid: coupid
             },
             method: 'post',
             success: (response) => {
-              
-                swal("Removed Success Fully", {
-                  icon: "success",
 
-                });
-                location.reload();
-             
+              swal("Removed Success Fully", {
+                icon: "success",
+
+              });
+              location.reload();
+
             }
           })
 
@@ -516,36 +522,36 @@
   }
 
 
-  function getCoupon(id){
-    
-let div=document.getElementById('data_id')
+  function getCoupon(id) {
 
-     $.ajax({
-            url: '/getcoupon',
-            data: {
-              userid:id              
-            },
-            method: 'post',
-            success: (response) => {
-                
-                const c=1;
-                div.innerHTML=""
-                for(let i=0;i<response.length;i++){
-                  div.innerHTML+=` <div class="card" style="width: 18rem;">
+    let div = document.getElementById('data_id')
+
+    $.ajax({
+      url: '/getcoupon',
+      data: {
+        userid: id
+      },
+      method: 'post',
+      success: (response) => {
+
+        const c = 1;
+        div.innerHTML = ""
+        for (let i = 0; i < response.length; i++) {
+          div.innerHTML += ` <div class="card" style="width: 18rem;">
 
                           <div class="card-body">
-                            <h5 class="card-title" id='coupon_name'>Coupon ${c+i} :  ${response[i].coupon}</h5>
+                            <h5 class="card-title" id='coupon_name'>Coupon ${c + i} :  ${response[i].coupon}</h5>
                             <p class="card-text"> <input type="text" class="border-1 text-success" value="${response[i]._id}" id="code">
                             </p>
                             <h6 id="offper">offper ${response[i].percentage} %</h6>
                           </div>
                          `
-    
-                 
-                }
-             
-            }
-          })
+
+
+        }
+
+      }
+    })
 
   }
 
