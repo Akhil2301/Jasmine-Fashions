@@ -6,7 +6,7 @@ var objectId = require('mongodb').ObjectId
 var instance = new Razorpay({key_id: 'rzp_test_Vldb0EmPlRSPUM', key_secret: 'jh7UxH26ViUIDmlsgLWvc7Ee'});
 
 const paypal = require('paypal-rest-sdk');
-const { Console } = require('console');
+
 
 paypal.configure({
     'mode': 'sandbox', // sandbox or live

@@ -6,6 +6,13 @@ const productHelpers = require('../helpers/product-helpers');
 const userHelpers = require('../helpers/user-helpers');
 const { response } = require('express');
 var objectId = require('mongodb').ObjectId
+const createInvoiceHelp =require('../helpers/pdfgenerator')
+
+ 
+
+
+
+
 const router = express.Router();
 const urlencodedParser = bodyParser.urlencoded({extended: false})
 
@@ -528,6 +535,16 @@ router.get('/orderdetail/:id', cartcnt, verifyLogin, async (req, res) => {
     })
 })
 
+router.post('/orderpdf', cartcnt, verifyLogin, async (req, res) => {
+    cartCount = req.session.cartCount
+ await userHelper.getOrderDetail(req.body.userid,req.session.user._id).then((response)=>{
+    
+    res.json(response)
+    })
+     
+   
+})
+
 
 router.get('/userpage', cartcnt, verifyLogin, async (req, res) => {
     cartCount = req.session.cartCount
@@ -801,7 +818,7 @@ router.post('/wallet',cartcnt, verifyLogin,async (req, res) => {
  })
 
 
- router.post('/walletremove',cartcnt, verifyLogin,async (req, res) => {
+ router.post('/walletremove',cartcnt, verifyLogin, (req, res) => {
    
     userHelpers.walletremove(req.body).then((response) => { // console.log(response);
         res.json(response)
@@ -809,5 +826,8 @@ router.post('/wallet',cartcnt, verifyLogin,async (req, res) => {
  
     
  })
+
+
+
 
 module.exports = router;
