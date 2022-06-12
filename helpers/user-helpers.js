@@ -1588,6 +1588,14 @@ module.exports = {
 
     },
 
+    getHeader:()=>{
+         return new Promise(async (resolve, reject) => {
+                let header = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray();
+
+                resolve(header)
+            })
+    }
+
 
 
 }

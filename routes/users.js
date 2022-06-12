@@ -23,10 +23,12 @@ const serviceid = "VA8c4913d5591c069a8a6d6d49bbf7162c";
 const client = require('twilio')(accountSid, authToken);
 
 
-const verifyLogin = (req, res, next) => {
+const verifyLogin = async(req, res, next) => {
     if (req.session.loggedIn) {
+        
         next();
     } else {
+        
         res.redirect('/')
     }
 }
@@ -45,6 +47,14 @@ const cartcnt = (req, res, next) => {
     }
 }
 
+    
+       
+           
+   
+    
+
+
+
 // const profilevalaidation = async (req, res) => {
 //     let userid = req.session.user._id
 //     let user = await userHelper.userDetail(userid);
@@ -62,6 +72,9 @@ const cartcnt = (req, res, next) => {
 
 /* GET users listing. */
 router.get('/', async function (req, res) { // console.log(req.body._id)
+
+    headers=await userHelper.getHeader()
+  
     cartCount = null
     if (req.session.loggedIn) {
         cartCount = await userHelper.getCartCount(req.session.user._id)
@@ -71,12 +84,12 @@ router.get('/', async function (req, res) { // console.log(req.body._id)
         if (req.session.user) {
             let a = product
 
-            res.render('user/index', {a, cartCount, user: req.session.user});
+            res.render('user/index', {a, cartCount, user: req.session.user,headers});
 
         } else if (! req.session.admin) {
             let a = product
 
-            res.render('user/index', {a});
+            res.render('user/index', {a,headers});
 
         }
     })
@@ -85,12 +98,13 @@ router.get('/', async function (req, res) { // console.log(req.body._id)
 });
 
 /*Get Login Page. */
-router.get('/login', function (req, res) {
+router.get('/login',async function (req, res) {
     try {
+        headers=await userHelper.getHeader()
         if (req.session.user) {
-            res.render('user/index', {user: req.session.user})
+            res.render('user/index', {user: req.session.user,headers})
         } else {
-            res.render('user/login');
+            res.render('user/login',{headers});
         }
     } catch (error) {
         res.send("500")
@@ -100,7 +114,8 @@ router.get('/login', function (req, res) {
 });
 
 /*post login Page.*/
-router.post('/login', function (req, res) {
+router.post('/login', async function (req, res) {
+    headers=await userHelper.getHeader()
 
     userHelper.doLogin(req.body).then((response) => {
         if (response.status) {
@@ -113,13 +128,14 @@ router.post('/login', function (req, res) {
         } else {
             req.session.loggedErr = true
             req.session.loggedIn = false
-            res.render('user/login', {err_msg: 'Enter the correct credential'})
+            res.render('user/login', {err_msg: 'Enter the correct credential',headers})
         }
     })
 
 });
 /*Get Signup Page.*/
-router.get('/signup', function (req, res) {
+router.get('/signup',async function (req, res) {
+    headers=await userHelper.getHeader()
     if(req.query){
          referal_name=req.query.ref_name
     }
@@ -127,19 +143,19 @@ router.get('/signup', function (req, res) {
         referal_name="" 
     }
     
-    res.render('user/signup',{referal_name});
+    res.render('user/signup',{referal_name,headers});
 });
 
 /*Post Signup Page.*/
 router.post('/signup', async (req, res) => {
-   
+    headers=await userHelper.getHeader()
     if (req.body.email != undefined && req.body.phone != undefined && req.body.fname != undefined && req.body.lname != undefined && req.body.phone != undefined && req.body.password != undefined) {
         let email = await userHelper.emailcheck(req.body)
         let phone = await userHelper.phonecheck(req.body)
         
         if (email.status && phone.status) {
 
-            res.render('user/signup', {err_msg: 'User is already exist'})
+            res.render('user/signup', {err_msg: 'User is already exist',headers})
         } else if (! email.status && ! phone.status) {
 
             client.verify.services(serviceid).verifications.create({
@@ -147,17 +163,17 @@ router.post('/signup', async (req, res) => {
                     req.body.phone
                 }`,
                 channel: 'sms'
-            }).then(verification => res.render('user/otp', {name_body: req.body}));
+            }).then(verification => res.render('user/otp', {name_body: req.body,headers}));
 
         } else { // console.log('error')
-            res.render('user/signup', {err_msg: 'User Already exist'})
+            res.render('user/signup', {err_msg: 'User Already exist',headers})
 
         }
 
 
     } else {
         //console.log('error')
-        res.render('user/signup', {err_msg: 'Enter Every field Properly'})
+        res.render('user/signup', {err_msg: 'Enter Every field Properly',headers})
 
     }
 
@@ -167,7 +183,7 @@ router.post('/signup', async (req, res) => {
 
 /*Post Signup Page.*/
 router.post('/otp', async (req, res) => {
-
+    
     client.verify.services(serviceid).verificationChecks.create({
             to: `+91${
             req.body.phone
@@ -185,8 +201,9 @@ router.post('/otp', async (req, res) => {
                 res.redirect('/signup')
             }
         })
-    }).catch((error) => {
-        res.render('user/signup', {err_msg: "Invalid Otp ..!"})
+    }).catch(async(error) => {
+        headers=await userHelper.getHeader()
+        res.render('user/signup', {err_msg: "Invalid Otp ..!",headers})
     });
 
 })
@@ -200,25 +217,26 @@ router.get('/logout', verifyLogin, (req, res, next) => {
 
 
 router.get('/product-details/:id', verifyLogin, cartcnt, async (req, res, next) => {
-
+    headers=await userHelper.getHeader()
     cartCount = req.session.cartCount
     let product = await productHelpers.getProductDetails(req.params.id)
 
     res.render('user/product-details', {
         product,
         user: req.session.user,
-        cartCount
+        cartCount,
+        headers
     });
 
 })
 
 
-router.get('/add-to-cart/:id', cartcnt, verifyLogin, (req, res) => {
-
+router.get('/add-to-cart/:id', cartcnt, verifyLogin, async(req, res) => {
+    headers=await userHelper.getHeader()
     userHelper.addToCart(req.params.id, req.session.user._id).then(async (response) => { // res.redirect('/cart')
         cartCount = await userHelper.getCartCount(req.session.user._id)
         cartCount = req.session.cartCount
-        res.json({status: true, cartCount})
+        res.json({status: true, cartCount,headers})
     })
 
 })
@@ -227,7 +245,7 @@ router.get('/add-to-cart/:id', cartcnt, verifyLogin, (req, res) => {
 router.get('/cart', verifyLogin, cartcnt, async (req, res) => {
     cartCount = req.session.cartCount
     let user = req.session.user
-
+    headers=await userHelper.getHeader()
     
     let products = await userHelper.getCartProducts(req.session.user._id)
 
@@ -248,10 +266,10 @@ router.get('/cart', verifyLogin, cartcnt, async (req, res) => {
         totalamtwithotcoupon = await userHelper.getTotalAmountWithoutCoupon(req.session.user._id)
         checks = false
     }
-    // console.log(totalamount)
+    
 
     let address = await userHelper.getAddress(req.session.user._id)
-    console.log(address)
+    
     res.render('user/cart', {
         products,
         users: req.session.user._id,
@@ -261,7 +279,7 @@ router.get('/cart', verifyLogin, cartcnt, async (req, res) => {
         totalamtwithotcoupon,
         totalamount,
         address,
-        
+        headers
 
     })
 
@@ -271,7 +289,8 @@ router.get('/cart', verifyLogin, cartcnt, async (req, res) => {
 /*******************address form ********** */
 router.get('/add-address', cartcnt, verifyLogin, async (req, res) => {
     let totalamount = await userHelper.getTotalAmount(req.session.user._id)
-    res.render('user/add-address', {totalamount, cartCount, user: req.session.user});
+    headers=await userHelper.getHeader()
+    res.render('user/add-address', {totalamount, cartCount, user: req.session.user,headers});
 
 
 })
@@ -292,6 +311,7 @@ router.post('/add-address', cartcnt, verifyLogin, (req, res) => {
         let totalamount = await userHelper.getTotalAmount(req.session.user._id)
 
         let address = await userHelper.getAddress(req.session.user._id)
+        headers=await userHelper.getHeader()
         res.render('user/cart', {
             products,
             users: req.session.user._id,
@@ -299,7 +319,8 @@ router.post('/add-address', cartcnt, verifyLogin, (req, res) => {
             user,
             totalamount,
             address,
-            form1
+            form1,
+            headers
         })
     })
 
@@ -310,11 +331,12 @@ router.get('/Edit-Address/:addreessId', cartcnt, verifyLogin, async(req, res) =>
     cartCount = req.session.cartCount
     let user = req.session.user
     let address = await userHelper.getAddressbyid(req.params.addreessId)
-    
+    headers=await userHelper.getHeader()
     res.render('user/edit-address',{
         cartCount,
         user,
-        address
+        address,
+        headers
     })
 
 })
@@ -333,7 +355,8 @@ router.get('/delete-Address/:id', verifyLogin, async (req, res) => {
 
 router.post('/Edit-Address/:addreessId', cartcnt, verifyLogin, (req, res) => {
 
-    userHelper.updateAddress(req.params.addreessId,req.body).then((response)=>{
+    userHelper.updateAddress(req.params.addreessId,req.body).then((response)=>{ 
+        
         res.redirect('/address')
     })
 
@@ -390,7 +413,7 @@ router.post('/place-orders', verifyLogin, cartcnt, async (req, res) => {
     let user = await userHelper.getUsertDetails(req.session.user._id)
     cartCount = req.session.cartCount
     let total_amount = await userHelper.getTotalAmount(req.session.user._id)
-    
+    headers=await userHelper.getHeader();
     if(cartItem[0].Wallet=='checked'){
         
        if(total_amount<=cartItem[0].walletamt){
@@ -414,7 +437,8 @@ router.post('/place-orders', verifyLogin, cartcnt, async (req, res) => {
         cartCount,
          user,
         address,
-        cartItem
+        cartItem,
+        headers
     })
 
 
@@ -556,23 +580,28 @@ router.get('/success/:id/:addressid', cartcnt, verifyLogin, async (req, res) => 
 })
 
 
-router.get('/order-success', cartcnt, verifyLogin, (req, res) => {
+router.get('/order-success', cartcnt, verifyLogin, async(req, res) => {
     cartCount = req.session.cartCount
+    headers=await userHelper.getHeader()
     res.render('user/order-success', {
         user: req.session.user,
         cartCount,
-        status: 'ok'
+        status: 'ok',
+        headers
+
     })
 })
 
 router.get('/orders', cartcnt, verifyLogin, async (req, res) => {
     cartCount = req.session.cartCount
     let orders = await userHelper.getOrderList(req.session.user._id)
-   // console.log(req.session.user._id)
+    headers=await userHelper.getHeader()
+   
     res.render('user/order-success', {
         user: req.session.user,
         cartCount,
         orders,
+        headers,
         status: 'false'
     })
 })
@@ -580,12 +609,13 @@ router.get('/orders', cartcnt, verifyLogin, async (req, res) => {
 router.get('/orderdetail/:id', cartcnt, verifyLogin, async (req, res) => {
     cartCount = req.session.cartCount
     let orders = await userHelper.getOrderDetail(req.params.id,req.session.user._id)
-     console.log(orders[0].status.placed)
+    headers=await userHelper.getHeader()
     res.render('user/order-detail', {
         user: req.session.user,
         cartCount,
         orders,
-        status: 'false'
+        status: 'false',
+        headers
     })
 })
 
@@ -604,14 +634,16 @@ router.get('/userpage', cartcnt, verifyLogin, async (req, res) => {
     cartCount = req.session.cartCount
     let address = await userHelper.getAddress(req.session.user._id)
     let user = await userHelper.getUsertDetails(req.session.user._id)
-    res.render('user/userpage', {user, cartCount, address})
+    headers=await userHelper.getHeader()
+    res.render('user/userpage', {user, cartCount, address,headers})
 })
 router.get('/Editprofie/:id', cartcnt, verifyLogin, async (req, res) => {
 
     cartCount = req.session.cartCount
     // let userDetail=await userHelper.getUsertDetails(req.params.id)
+    headers=await userHelper.getHeader()
     let user = await userHelper.getUsertDetails(req.session.user._id)
-    res.render('user/edit-profile', {user, cartCount});
+    res.render('user/edit-profile', {user, cartCount,headers});
 
 })
 
@@ -645,9 +677,11 @@ router.get('/cancel-order/:pid', cartcnt, verifyLogin, (req, res) => {
 router.get('/changepassword', cartcnt, verifyLogin, async (req, res) => {
     cartCount = req.session.cartCount
     let user = await userHelper.getUsertDetails(req.session.user._id)
+    headers=await userHelper.getHeader()
     res.render('user/change-password', {
         user: user,
-        cartCount
+        cartCount,
+        headers
     })
 
 })
@@ -655,16 +689,19 @@ router.get('/changepassword', cartcnt, verifyLogin, async (req, res) => {
 router.get('/address', cartcnt, verifyLogin, async (req, res) => {
     cartCount = req.session.cartCount
     let address = await userHelper.getAddress(req.session.user._id)
+    headers=await userHelper.getHeader()
     res.render('user/address', {
         user: req.session.user,
         cartCount,
-        address
+        address,
+        headers
     })
 
 })
 
 router.post('/changepassword', cartcnt, verifyLogin, async (req, res) => {
-    cartCount = req.session.cartCount
+    cartCount = req.session.cartCount;
+    headers=await userHelper.getHeader()
     userHelper.chekChangePassword(req.session.user, req.body).then((response) => {
         if (response.status) {
             client.verify.services(serviceid).verifications.create({
@@ -672,13 +709,13 @@ router.post('/changepassword', cartcnt, verifyLogin, async (req, res) => {
                     req.session.user.phone
                 }`,
                 channel: 'sms'
-            }).then(verification => res.render('user/otp-changepass', {name_body: req.body}));
+            }).then(verification => res.render('user/otp-changepass', {name_body: req.body,headers}));
         } else {
-            res.render('user/change-password', {err_msg: "Enter The Correct Data"})
+            res.render('user/change-password', {err_msg: "Enter The Correct Data",headers})
         }
 
     }).catch((error) => {
-        res.render('user/change-password', {err_msg: "Please Retry after sometimes"})
+        res.render('user/change-password', {err_msg: "Please Retry after sometimes",headers})
     })
 
 
@@ -769,13 +806,15 @@ router.post('/verify-payment', verifyLogin, cartcnt, async (req, res) => {
     })
 })
 
-router.get('/crop-images/:id',verifyLogin, cartcnt, (req, res) => {
+router.get('/crop-images/:id',verifyLogin, cartcnt,async (req, res) => {
     cartCount = req.session.cartCount
     user = req.params.id
+    headers=await userHelper.getHeader()
     res.render('user/crop-images', {
         crop: true,
         user,
-        cartCount
+        cartCount,
+        headers
     })
 })
 
@@ -838,12 +877,13 @@ router.post('/removeCoupon',cartcnt, verifyLogin, (req, res) => { // console.log
 router.get('/referalcode',cartcnt, verifyLogin,async (req, res) => {
     cartCount = req.session.cartCount
     let referalamount=await productHelpers.refamount()
-    //console.log(referalamount)
+    headers=await userHelper.getHeader()
     let user = await userHelper.getUsertDetails(req.session.user._id)
        res.render('user/referalcode', {
         user: user,
         cartCount,
-        referalamount:referalamount
+        referalamount:referalamount,
+        headers
     })
 })
 

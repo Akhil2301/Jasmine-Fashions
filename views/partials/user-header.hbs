@@ -10,13 +10,14 @@
             <div class="order-lg-2 nav-btns">
                 {{#if user}}
                 <a type="button" class="btn position-relative" href="/cart">
-                    <i class="fa fa-shopping-cart"></i>                     
-                    <span class="position-absolute top-0 start-100 translate-middle badge bg-primary" id="cart-count">{{cartCount}}</span>
-                                    </a>
+                    <i class="fa fa-shopping-cart"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge bg-primary"
+                        id="cart-count">{{cartCount}}</span>
+                </a>
                 {{/if}}
                 {{#if user}}
                 <div class="dropdown">
-                    <button class="dropbtn"> <i class="fa fa-user">  &nbsp;{{user.fname}}</i></button>
+                    <button class="dropbtn"> <i class="fa fa-user"> &nbsp;{{user.fname}}</i></button>
                     <div class="dropdown-content">
                         <a href="/userpage">My Account</a>
                         <a href="/order-success">Orders</a>
@@ -38,23 +39,15 @@
             <div class="collapse navbar-collapse order-lg-1" id="navMenu">
                 <ul class="navbar-nav mx-auto text-center">
                     <li class="nav-item px-2 py-2">
-                        <a class="nav-link text-uppercase text-dark" href="/">home</a>
+                        <a class="nav-link text-uppercase text-dark" href="/">Home</a>
                     </li>
+                    {{#each headers}}
                     <li class="nav-item px-2 py-2">
-                        <a class="nav-link text-uppercase text-dark" href="#collection">Men</a>
+                        <a class="nav-link text-uppercase text-dark" href="/categorysort/{{this._id}}">{{this.category}}</a>
                     </li>
-                    <li class="nav-item px-2 py-2">
-                        <a class="nav-link text-uppercase text-dark" href="#special">Womens</a>
-                    </li>
-                    <li class="nav-item px-2 py-2">
-                        <a class="nav-link text-uppercase text-dark" href="#blogs">Kids</a>
-                    </li>
-                    <li class="nav-item px-2 py-2">
-                        <a class="nav-link text-uppercase text-dark" href="#about">Infants</a>
-                    </li>
-                    <li class="nav-item px-2 py-2 border-0">
-                        <a class="nav-link text-uppercase text-dark" href="#popular">Others</a>
-                    </li>
+                    {{/each}}
+                    
+
                 </ul>
             </div>
         </div>
@@ -62,27 +55,26 @@
 </header>
 
 <!-- end of navbar -->
- <main id="main" class="main">
+<main id="main" class="main">
 
 
-        <section class="section dashboard">
-            <div class="row">
-
-
-
-                <!-- Right side columns -->
-                <div class="col-lg-4">
+    <section class="section dashboard">
+        <div class="row">
 
 
 
+            <!-- Right side columns -->
+            <div class="col-lg-4">
 
 
 
 
-                </div><!-- End Right side columns -->
 
-            </div>
-        </section>
 
-    </main><!-- End #main -->
 
+            </div><!-- End Right side columns -->
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
