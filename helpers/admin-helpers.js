@@ -388,6 +388,17 @@ module.exports = {
 
         })
     },
+    
+
+
+
+
+
+
+
+
+
+
     addCouponToDataBase: (data) => {
         data.percentage = parseInt(data.percentage)
         return new Promise((resolve, resject) => {
@@ -410,6 +421,61 @@ module.exports = {
             db.get().collection(collection.COUPON_COLLETION).remove({ _id: objectId(id.id) }).then(() => {
                 resolve()
             })
+        })
+    },
+    SalePerMonth: () => {
+        return new Promise(async (resolve, reject) => {
+            let orderperday = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+             
+             
+
+
+                {
+                    $group: {
+                        _id:{$dateToString:{format: "%Y-%m-%d", date: "$dat"}
+                        },
+
+
+                        TotalSum: {
+                            $sum: "$totalAmount"
+                        },
+
+                        walletpay: {
+                            $sum: "$Walletpay"
+                        },
+                      
+                    }
+                }
+
+            ]).toArray()
+          
+            resolve(orderperday)
+
+        })
+    },
+
+
+    paymentMethod:(cod)=>{
+        return new Promise(async (resolve, reject) => {
+            let orderperday = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+             
+             {$match:{
+                paymentMethod:cod
+             }
+            },
+            {
+                $count:
+                    'paymentMethod'
+                
+            }
+
+
+               
+
+            ]).toArray()
+           console.log(orderperday[0])
+            resolve(orderperday[0])
+
         })
     }
     

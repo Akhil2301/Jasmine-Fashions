@@ -40,6 +40,10 @@ router.get('/', async (req, res, next) =>{
         let totalsale= await adminHelpers.totalsale()
         let todaysale= await adminHelpers.todaysale()
         let orderperday= await adminHelpers.orderperday()
+        
+        let COD= await adminHelpers.paymentMethod('COD')
+        let razorpay= await adminHelpers.paymentMethod('razorpay')
+        let paypal= await adminHelpers.paymentMethod('paypal')
        // console.log(todaysale)
         res.render('admin/index', {
            
@@ -49,7 +53,10 @@ router.get('/', async (req, res, next) =>{
             totalorder:totalorder,
             totalsale:totalsale,
             todaysale:todaysale,
-            orderperday:orderperday
+            orderperday:orderperday,
+            COD:COD,
+            razorpay:razorpay,
+            paypal:paypal
         });
     } else {
 
@@ -435,8 +442,10 @@ router.get('/monthlyreport', verifyLogin, async(req, res)=>{
     let previousyear = new Date(nowDate - YEAR_SECONDS)
     adminHelpers.getMonthReport(previousweek).then((response) => {
       report = response
+      
+      
 
-     res.render('admin/yearlyreport', { report, admin: req.session.admin,admins:true,ad_log:true })
+     res.render('admin/yearlyreport', { report, admin: req.session.admin,admins:true,ad_log:true ,totalam})
     })
   })
 
@@ -444,30 +453,68 @@ router.get('/monthlyreport', verifyLogin, async(req, res)=>{
     
     
     let nowDate = new Date();
-    
-    adminHelpers.getdailyReport(nowDate).then((response) => {
+    head_data=""
+    adminHelpers.SalePerMonth().then((response) => {
       report = response
+      totalam=0
+      walpay=0
+      let tot= response.filter(function(a) {
+        
+      
+         totalam=totalam+a.TotalSum
+         walpay=walpay+a.walletpay
+      
+       
+      });
 
-     res.render('admin/daywisereport', { report, admin: req.session.admin,admins:true,ad_log:true })
+
+
+
+     res.render('admin/daywisereport', { report, admin: req.session.admin,admins:true,ad_log:true,head_data,totalam,walpay})
     })
   })
 
   router.post('/dailyreport', verifyLogin, async(req, res)=>{
-    //console.log('hhh')
-    //if (req.params.day1){}
-    adminHelpers.getdailyReports(req.body.today).then((response) => {
+    
+    
+    adminHelpers.SalePerMonth().then((response) => {
     //   report = response
-    var startDate = req.params.day1;
-var endDate = req.params.day2;
-    var report = response.filter(a => {
-       
-        var datess =a.dat >= startDate && a.dat <= endDate;
+
+    
+    var startDate = req.body.fromdate;
+    var endDate = req.body.todate;
+    var strDat=new Date(startDate);
+    var endDat=new Date(endDate);
+    var totalam=0
+    var walpay=0
+    head_data=`From ${startDate} To ${endDate}`
+      let report = response.filter(function(a) {
         
-        return (a.dat >= startDate && a.dat <= endDate);
+        var d1 = new Date(a._id);
+         
+   if(d1>strDat && d1< endDat){
+    totalam=totalam+a.TotalSum
+    walpay=walpay+a.walletpay
+   }
+
+      return d1>strDat && d1< endDat
+      
+       
       });
- 
-     res.render('admin/daywisereport', { report, admin: req.session.admin,admins:true,ad_log:true })
+     
+      
+        
+   
+     res.render('admin/daywisereport', { report, admin: req.session.admin,admins:true,ad_log:true,head_data,totalam,walpay},function(err,html){
+        res.send(html)
+     })
+
     })
+
+
+
+
+
   })
 
 
@@ -564,5 +611,20 @@ router.post('/refferelcode', verifyLogin, (req, res) => {
       res.redirect('/admin/referalcode')
   })
 })
+
+router.get('/orderdetail/:id', verifyLogin, async (req, res) => {
   
+  let orders = await productHelper.getOrderDetail(req.params.id)
+ 
+  res.render('admin/order-detail', {
+    admins: true,
+    admin: req.session.admin,
+    ad_log:true,
+    orders
+  })
+})
+
+
+
+
 module.exports = router;

@@ -653,6 +653,95 @@ resolve(products[0])
             
          })
     },
+
+    getOrderDetail: (orderId) => {
+        return new Promise(async (resolve, reject) => {
+            let orderItem = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match:{_id:objectId(orderId)}
+                },
+               
+                {$unwind:'$products'},
+                {$unwind:'$status'},
+                
+                {
+                  $project:{
+                    item:'$products.item',
+                    quantity:'$products.quantity',
+                    Walletpay:1,
+                    totalAmount:1,
+                    receipt:1,
+                    dat:1,
+                    status:1
+                  }
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTIOS,
+                        localField: 'item',
+                        foreignField: '_id',
+                        as: 'product'
+                    }
+                },
+                {$project:{
+
+                                        
+                  
+                    quantity:1,
+                    product:{$arrayElemAt: ['$product', 0]},
+                    receipt:1,
+                    totalAmount:1,
+                    Walletpay:1,
+                    dat:1,
+                    status:1
+                } 
+                },
+                {
+                    $unwind:'$product'
+                },
+                {
+                    $project:{
+                        item: 1,
+                        quantity: 1,
+                        product:1,
+                        totalAmount:1,
+                        receipt:1,
+                        Walletpay:1, 
+                        "dat": {
+                            "$dateToString": {
+                                "format": "%Y-%m-%d",
+                                "date": "$dat"
+                            }
+                        },
+                        status:1,
+
+                        total:{
+                              
+                       
+                  
+                            $cond: {
+                                // if : {$eq:['$product.catoffstatus',true]},
+                                // then:{$subtract:[{$subtract:['$product.price',{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,'$product.catofferper']},'$product.price']},100]}]}]},{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,'$product.offerper']},'$product.price']},100]}]}]},//$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
+                                // else:'$product.price' 
+                                if : {$or:[{$eq:['$product.catoffstatus',true]},{$eq:['$product.status',true]}]} ,
+                                then:{$subtract:[{$subtract:['$product.price',{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,{$add:[0,{$ifNull:['$product.catofferper',0]}]}]},'$product.price']},100]}]}]},{$subtract:['$product.price',{$divide:[{$multiply:[{$subtract:[100,{$add:[0,{$ifNull:['$product.offerper',0]}]}]},'$product.price']},100]}]}]},//$divide:[{$multiply:[{$subtract:[100,'$catofferper']},'$price']},100]},
+                                else:'$product.price'  
+    
+                                
+    
+                          } 
+                        }
+                    }
+                }
+
+
+            ]).toArray();
+            
+            resolve(orderItem)
+        })
+
+
+    },
     
 
 

@@ -74,7 +74,7 @@
                 
 
                 <div class="card-body">
-                  <h5 class="card-title">Sales <span>| Total</span></h5>
+                  <h5 class="card-title">Revenue <span>| Total</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -96,7 +96,7 @@
        
 
 
-        <div class="col-lg-12">
+        <div class="col-lg-8">
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Sale Per day</h5>
@@ -130,7 +130,42 @@
             </div>
           </div>
         </div>
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Payment Method</h5>
 
+              <!-- Pie Chart -->
+              <canvas id="pieChart" style="max-height: 400px;"></canvas>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new Chart(document.querySelector('#pieChart'), {
+                    type: 'pie',
+                    data: {
+                      labels: [
+                        'cod',
+                        'razorpay',
+                        'paypal'
+                      ],
+                      datasets: [{
+                        label: 'My First Dataset',
+                        data: [{{COD.paymentMethod}}, {{razorpay.paymentMethod}}, {{paypal.paymentMethod}}],
+                        backgroundColor: [
+                          'rgb(255, 99, 132)',
+                          'rgb(54, 162, 235)',
+                          'rgb(255, 205, 86)'
+                        ],
+                        hoverOffset: 4
+                      }]
+                    }
+                  });
+                });
+              </script>
+              <!-- End Pie CHart -->
+
+            </div>
+          </div>
+        </div>
 
 
         </div><!-- End Right side columns -->

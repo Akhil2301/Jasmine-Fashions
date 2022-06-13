@@ -61,6 +61,12 @@ HBS.registerHelper( "when",function(operand_1, operator, operand_2, options) {
 });
 
 
+HBS.registerHelper('currentDate', function(format) {
+  return new Date()
+});
+
+
+
 
 
 
