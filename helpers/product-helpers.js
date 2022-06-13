@@ -176,6 +176,7 @@ var objectId = require('mongodb').ObjectId
                 // resolve(products)
                 // console.log(new Date())
                 let products = await db.get().collection(collection.PRODUCT_COLLECTIOS).aggregate([
+                    
                     {
                         $lookup: {
                             from: SUB_COLLECTION,
@@ -192,7 +193,11 @@ var objectId = require('mongodb').ObjectId
                             as: 'category'
 
                         }
-                    }, {
+                    }, 
+                    
+                    
+                    
+                    {
                         $project: {
                             "dats": {
                                 "$dateToString": {

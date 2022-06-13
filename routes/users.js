@@ -4,6 +4,7 @@ const {check, validationResult} = require('express-validator');
 const userHelper = require('../helpers/user-helpers');
 const productHelpers = require('../helpers/product-helpers');
 const userHelpers = require('../helpers/user-helpers');
+const sortHelper=require('../helpers/sort-helper');
 const { response } = require('express');
 var objectId = require('mongodb').ObjectId
 const createInvoiceHelp =require('../helpers/pdfgenerator')
@@ -921,7 +922,67 @@ router.post('/wallet',cartcnt, verifyLogin,async (req, res) => {
     
  })
 
+ router.get('/shop',cartcnt, verifyLogin,async (req, res) => {
+    cartCount = req.session.cartCount
+    
+    headers=await userHelper.getHeader()
+    let user = await userHelper.getUsertDetails(req.session.user._id)
+    
+    productHelpers.viewproduct().then(product => {
+        
+        let a = product
+        
+        res.render('user/shop', {a, cartCount, user,headers});
 
+   
+})
+     
+})
+
+
+router.get('/categorysort/:id',cartcnt, verifyLogin,async (req, res) => {
+    cartCount = req.session.cartCount
+   
+    headers=await userHelper.getHeader()
+
+    sortHelper.viewCategoryId(req.params.id).then(product => {
+        
+            let a = product
+            
+            res.render('user/shop', {a, cartCount, user: req.session.user,headers});
+
+       
+    })    
+})
+
+router.get('/shopsort/:price',cartcnt, verifyLogin,async (req, res) => {
+        cartCount = req.session.cartCount
+       
+        headers=await userHelper.getHeader()
+    if(req.params.price==-1){
+        productHelpers.viewproduct().then(product => {
+        
+            let a = product
+            
+            res.render('user/shop', {a, cartCount, user: req.session.user,headers,checkamount:req.params.price});
+    
+       
+    })
+
+    }
+    else{
+        sortHelper.priceSort(req.params.price).then(product => {
+            
+            let a = product
+            
+            res.render('user/shop', {a, cartCount, user: req.session.user,headers,checkamount:req.params.price});
+
+       
+    })
+    }
+         
+     
+})
 
 
 module.exports = router;

@@ -1,196 +1,242 @@
+<main class="pt-5 my-5">
+    <div class="container pt-5">
 
-<div class="filter">
-    <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#mobile-filter" aria-expanded="false" aria-controls="mobile-filter">Filters<span class="fa fa-filter pl-1"></span></button>
-</div>
-<div id="mobile-filter">
-    <div>
-        <h6 class="p-1 border-bottom">Home Furniture</h6>
-        <ul>
-            <li><a href="#">Living</a></li>
-            <li><a href="#">Dining</a></li>
-            <li><a href="#">Office</a></li>
-            <li><a href="#">Bedroom</a></li>
-            <li><a href="#">Kitchen</a></li>
-        </ul>
-    </div>
-    <div>
-        <h6 class="p-1 border-bottom">Filter By</h6>
-        <p class="mb-2">Color</p>
-        <ul class="list-group">
-            <li class="list-group-item list-group-item-action mb-2 rounded"><a href="#">
-                <span class="fa fa-circle pr-1" id="red"></span>Red
-            </a></li>
-            <li class="list-group-item list-group-item-action mb-2 rounded"><a href="#">
-                <span class="fa fa-circle pr-1" id="teal"></span>Teal
-            </a></li>
-            <li class="list-group-item list-group-item-action mb-2 rounded"><a href="#">
-                <span class="fa fa-circle pr-1" id="blue"></span>Blue
-            </a></li>
-        </ul>
-    </div>
-    <div>
-        <h6>Type</h6>
-        <form class="ml-md-2">
-            <div class="form-inline border rounded p-sm-2 my-2">
-                <input type="radio" name="type" id="boring">
-                <label for="boring" class="pl-1 pt-sm-0 pt-1">Boring</label>
-            </div>
-            <div class="form-inline border rounded p-sm-2 my-2">
-                <input type="radio" name="type" id="ugly">
-                <label for="ugly" class="pl-1 pt-sm-0 pt-1">Ugly</label>
-            </div>
-            <div class="form-inline border rounded p-md-2 p-sm-1">
-                <input type="radio" name="type" id="notugly">
-                <label for="notugly" class="pl-1 pt-sm-0 pt-1">Not Ugly</label>
-            </div>
-        </form>
-    </div>
-</div>
-<section id="sidebar">
-    <div>
-        <h6 class="p-1 border-bottom">Home Furniture</h6>
-        <ul>
-            <li><a href="#">Living</a></li>
-            <li><a href="#">Dining</a></li>
-            <li><a href="#">Office</a></li>
-            <li><a href="#">Bedroom</a></li>
-            <li><a href="#">Kitchen</a></li>
-        </ul>
-    </div>
-    <div>
-        <h6 class="p-1 border-bottom">Filter By</h6>
-        <p class="mb-2">Color</p>
-        <ul class="list-group">
-            <li class="list-group-item list-group-item-action mb-2 rounded"><a href="#">
-                <span class="fa fa-circle pr-1" id="red"></span>Red
-            </a></li>
-            <li class="list-group-item list-group-item-action mb-2 rounded"><a href="#">
-                <span class="fa fa-circle pr-1" id="teal"></span>Teal
-            </a></li>
-            <li class="list-group-item list-group-item-action mb-2 rounded"><a href="#">
-                <span class="fa fa-circle pr-1" id="blue"></span>Blue
-            </a></li>
-        </ul>
-    </div>
-    <div>
-        <h6>Type</h6>
-        <form class="ml-md-2">
-            <div class="form-inline border rounded p-sm-2 my-2">
-                <input type="radio" name="type" id="boring">
-                <label for="boring" class="pl-1 pt-sm-0 pt-1">Boring</label>
-            </div>
-            <div class="form-inline border rounded p-sm-2 my-2">
-                <input type="radio" name="type" id="ugly">
-                <label for="ugly" class="pl-1 pt-sm-0 pt-1">Ugly</label>
-            </div>
-            <div class="form-inline border rounded p-md-2 p-sm-1">
-                <input type="radio" name="type" id="notugly">
-                <label for="notugly" class="pl-1 pt-sm-0 pt-1">Not Ugly</label>
-            </div>
-        </form>
-    </div>
-</section>
-<section id="products">
-<div class="container">
-    <div class="row">
-        <div class="col-lg-3 col-sm-4 col-11 offset-sm-0 offset-1">
-            <div class="card">
-                <img class="card-img-top" src="https://images.pexels.com/photos/963486/pexels-photo-963486.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Card image cap">
-                <div class="card-body">
-                  <p class="card-text">Wooden chair with legs</p>
-                  <p>$90</p>
-                  <span class="fa fa-circle" id="red"></span>        
-                  <span class="fa fa-circle" id="teal"></span>        
-                  <span class="fa fa-circle" id="blue"></span>        
+
+
+        <!-- Breadcrumb Section End -->
+
+        <!-- Shop Section Begin -->
+        <section class="shop spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="shop__sidebar">
+
+                            <div class="shop_sidebar_accordion">
+                                <div class="accordion" id="accordionExample">
+                                    <div class="card">
+                                        <div class="card-heading ">
+                                            <strong><a data-toggle="collapse" class="px-5 bold"
+                                                    style="text-decoration: none; color:black"
+                                                    data-target="#collapseOne">CATAGORIES</a></strong>
+                                        </div>
+                                        <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop_sidebar_categories">
+                                                    <ul class="nice-scroll">
+                                                        {{#each headers}}
+                                                        <li style="list-style: none;"><a
+                                                                href="/categorysort/{{this._id}}"
+                                                                style="text-decoration:none;"
+                                                                class="text-secondary">{{this.category}}</a></li>
+                                                        {{/each}}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <strong> <a data-toggle="collapse" class="px-5 bold"
+                                                    style="text-decoration: none; color:black"
+                                                    data-target="#collapseThree">Filter Price</a></strong>
+                                        </div>
+                                        <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop_sidebar_price">
+                                                    <ul style="list-style: none;">
+                                                        
+                                                        {{#when checkamount 'eq' -1}}
+                                                        <li><input type="radio" name="price" value="-1" checked
+                                                                id="price0"> <span class="text-secondary">All</span>
+                                                        </li>
+                                                        {{/when}}
+                                                        {{#when checkamount 'noteq' -1}}
+                                                        <li><input type="radio" name="price" value="-1" id="price0">
+                                                            <span class="text-secondary">All</span>
+                                                        </li>
+                                                        {{/when}}
+                                                        {{#when checkamount 'eq' 500}}
+                                                        <li><input type="radio" name="price" value="500" id="price1"
+                                                                checked> <span class="text-secondary"> ₹0.00
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;
+                                                                ₹500.00</span></li>
+                                                        {{/when}}
+
+                                                        {{#when checkamount 'noteq' 500}}
+                                                        <li><input type="radio" name="price" value="500" id="price1">
+                                                            <span class="text-secondary"> ₹0.00
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;
+                                                                ₹500.00</span>
+                                                        </li>
+                                                        {{/when}}
+
+                                                        {{#when checkamount 'eq' 1000}}
+                                                        <li><input type="radio" name="price" value="1000" id="price2"
+                                                                checked><span class="text-secondary">
+                                                                ₹500.00
+                                                                &nbsp; - ₹1000.00 </span></li>
+                                                        {{/when}}
+                                                        {{#when checkamount 'noteq' 1000}}
+                                                        <li><input type="radio" name="price" value="1000"
+                                                                id="price2"><span class="text-secondary">
+                                                                ₹500.00
+                                                                &nbsp; - ₹1000.00 </span></li>
+
+                                                        {{/when}}
+                                                        {{#when checkamount 'eq' 1500}}
+                                                        <li><input type="radio" name="price" value="1500" id="id="
+                                                                price3"" checked><span class="text-secondary"> ₹1000.00
+                                                                -
+                                                                ₹1500.00</span></li>
+                                                        {{/when}}
+
+                                                        {{#when checkamount 'noteq' 1500}}
+                                                        <li><input type="radio" name="price" value="1500" id="id="
+                                                                price3""><span class="text-secondary"> ₹1000.00 -
+                                                                ₹1500.00</span></li>
+                                                        {{/when}}
+                                                        {{#when checkamount 'eq' 1500}}
+                                                        <li><input type="radio" name="price" value="2000"
+                                                                id="price4" checked><span class="text-secondary" >
+                                                                ₹1500.00 -
+                                                                ₹2000.00</span></li>
+                                                        {{/when}}
+                                                        {{#when checkamount 'noteq' 1500}}
+                                                        <li><input type="radio" name="price" value="2000"
+                                                                id="price4"><span class="text-secondary"> ₹1500.00 -
+                                                                ₹2000.00</span></li>
+                                                        {{/when}}
+                                                        {{#when checkamount 'eq' 2499}}
+                                                        <li><input type="radio" name="price" value="2499" id="price5"
+                                                                checked><span class="text-secondary"> ₹2000.00 -
+                                                                ₹2500.00</span></li>
+                                                        {{/when}}
+                                                        {{#when checkamount 'noteq' 2499}}
+                                                        <li><input type="radio" name="price" value="2499"
+                                                                id="price5"><span class="text-secondary"> ₹2000.00 -
+                                                                ₹2500.00</span></li>
+                                                        {{/when}}
+                                                        {{#when checkamount 'eq' 2500}}
+                                                        <li><input type="radio" name="price" value="2500"
+                                                                id="price6" checked><span class="text-secondary">
+                                                                ₹2500.00+</span></a></li>
+                                                        {{/when}}
+
+                                                         {{#when checkamount 'noteq' 2500}}
+                                                        <li><input type="radio" name="price" value="2500"
+                                                                id="price6"><span class="text-secondary">
+                                                                ₹2500.00+</span></a></li>
+                                                        {{/when}}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+
+                        <div class="row">
+                            {{#each a}}
+                            <div class="col-4 col-lg-4 col-md-4 mb-2 col-sm-12">
+
+                                <div class="card">
+                                    <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                        data-mdb-ripple-color="light">
+                                        <a href="/product-details/{{this._id}}"><img src="/uploads/{{images.[0]}}"
+                                                class="w-100" style="height: 18rem;" /></a>
+                                        <a href="/product-details/{{this._id}}">
+                                            <div class="mask">
+                                                <div class="d-flex justify-content-start align-items-end h-100">
+
+                                                    {{#if status}}
+                                                    {{#if catoffstatus}}
+                                                    <h5><span class="badge bg-primary ms-2"> {{sum offerper
+                                                            catofferper}} % Off</span>
+                                                    </h5>
+                                                    {{else}}
+                                                    <h5><span class="badge bg-primary ms-2"> {{offerper}} % Off</span>
+                                                    </h5>
+                                                    {{/if}}
+
+                                                    {{else}}
+
+                                                    {{#if catoffstatus}}
+                                                    <h5><span class="badge bg-primary ms-2"> {{catofferper}} %
+                                                            Off</span></h5>
+                                                    {{else}}
+
+                                                    <h5><span class="badge bg-primary ms-2">0% off</span></h5>
+                                                    {{/if}}
+
+                                                    {{/if}}
+                                                </div>
+                                            </div>
+
+                                        </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <a href="/product-details/{{this._id}}" class="text-reset"
+                                            style="text-decoration: none;">
+                                            <h5 class="card-title mb-3">{{Name}}</h5>
+                                        </a>
+                                        {{!-- <a href="" class="text-reset">
+                                            <p>Category</p>
+                                        </a> --}}
+                                        {{#if status}}
+                                        {{#if catoffstatus}}
+                                        <s>&#x20B9; {{price}}</s><strong class="ms-2 text-danger"> &#x20B9;
+                                            {{total}}</strong>
+                                        {{else}}
+                                        <s>&#x20B9; {{price}}</s><strong class="ms-2 text-danger"> &#x20B9;
+                                            {{total}}</strong>
+                                        {{/if}}
+                                        {{else}}
+                                        {{#if catoffstatus}}
+                                        <s>&#x20B9; {{price}}</s><strong class="ms-2 text-danger"> &#x20B9;
+                                            {{total}}</strong>
+                                        {{else}}
+                                        <strong class="ms-2 text-danger"> &#x20B9; {{price}}</strong>
+                                        {{/if}}
+                                        {{/if}}
+                                    </div>
+                                    <div class="cart  align-items-center"> <button
+                                            class="btn btn-danger text-white btn-outline-primary fa fa-shopping-cart text-uppercase w-100"
+                                            onclick="addtocart('{{this._id}}')">Add to cart</button>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
                 </div>
-              </div>
-        </div>
-        <div class="col-lg-3 offset-lg-0 col-sm-4 offset-sm-2 col-11 offset-1">
-            <div class="card">
-                <img class="card-img-top" src="https://images.pexels.com/photos/1125137/pexels-photo-1125137.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Card image cap">
-                <div class="card-body">
-                  <p class="card-text">Ugly chair and table set</p>
-                  <p>$100</p>
-                  <span class="fa fa-circle" id="red"></span>        
-                  <span class="fa fa-circle" id="teal"></span>        
-                  <span class="fa fa-circle" id="blue"></span>        
-                </div>
-              </div>
-        </div>
-        <div class="col-lg-3 col-sm-4 col-11 offset-sm-0 offset-1">
-            <div class="card">
-                <img class="card-img-top" src="https://images.pexels.com/photos/3757055/pexels-photo-3757055.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Card image cap">
-                <div class="card-body">
-                  <p class="card-text">Leather Lounger</p>
-                  <p>$950</p>
-                  <span class="fa fa-circle" id="red"></span>        
-                  <span class="fa fa-circle" id="teal"></span>        
-                  <span class="fa fa-circle" id="blue"></span>        
-                </div>
-              </div>
-        </div>
-        <div class="col-lg-3 col-sm-4 offset-lg-0 offset-sm-2 col-11 offset-1">
-            <div class="card">
-                <img class="card-img-top" src="https://images.unsplash.com/photo-1537182534312-f945134cce34?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="Card image cap">
-                <div class="card-body">
-                  <p class="card-text">Tree Trunk table set</p>
-                  <p>$390</p>
-                  <span class="fa fa-circle" id="red"></span>        
-                  <span class="fa fa-circle" id="teal"></span>        
-                  <span class="fa fa-circle" id="blue"></span>        
-                </div>
-            </div>
-        </div>
+        </section>
+        <!-- Shop Section End -->
+
+
+
+
     </div>
-    <div class="row mt-3">
-        <div class="col-lg-3 col-sm-4 col-11 offset-sm-0 offset-1">
-            <div class="card">
-                <img class="card-img-top" src="https://images.pexels.com/photos/3230274/pexels-photo-3230274.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Card image cap">
-                <div class="card-body">
-                  <p class="card-text">Red Leather Bar Stool</p>
-                  <p>$30</p>
-                  <span class="fa fa-circle" id="red"></span>        
-                  <span class="fa fa-circle" id="teal"></span>        
-                  <span class="fa fa-circle" id="blue"></span>        
-                </div>
-              </div>
-        </div>
-        <div class="col-lg-3 col-sm-4 offset-lg-0 offset-sm-2 col-11 offset-1">
-            <div class="card">
-                <img class="card-img-top" src="https://images.pexels.com/photos/3773571/pexels-photo-3773571.png?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Card image cap">
-                <div class="card-body">
-                  <p class="card-text">Modern Dining Table</p>
-                  <p>$740</p>
-                  <span class="fa fa-circle" id="red"></span>        
-                  <span class="fa fa-circle" id="teal"></span>        
-                  <span class="fa fa-circle" id="blue"></span>        
-                </div>
-              </div>
-        </div>
-        <div class="col-lg-3 col-sm-4 col-11 offset-sm-0 offset-1">
-            <div class="card">
-                <img class="card-img-top" src="https://images.pexels.com/photos/534172/pexels-photo-534172.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Card image cap">
-                <div class="card-body">
-                  <p class="card-text">Boring Dining Table</p>
-                  <p>$760</p>
-                  <span class="fa fa-circle" id="red"></span>        
-                  <span class="fa fa-circle" id="teal"></span>        
-                  <span class="fa fa-circle" id="blue"></span>        
-                </div>
-              </div>
-        </div>
-        <div class="col-lg-3 col-sm-4 offset-lg-0 offset-sm-2 col-11 offset-1">
-            <div class="card">
-                <img class="card-img-top" src="https://images.pexels.com/photos/37347/office-sitting-room-executive-sitting.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Card image cap">
-                <div class="card-body">
-                  <p class="card-text">An Ugly Office</p>
-                  <p>$90</p>
-                  <span class="fa fa-circle" id="red"></span>        
-                  <span class="fa fa-circle" id="teal"></span>        
-                  <span class="fa fa-circle" id="blue"></span>        
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</section>
+</main>
+
+<script>
+    $('input[type=radio][name=price]').change(function () {
+
+
+
+
+        window.location.href = `/shopsort/${this.value}`
+
+    });
+</script>
