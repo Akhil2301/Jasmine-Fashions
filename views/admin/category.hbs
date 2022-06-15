@@ -26,13 +26,13 @@
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/admin/category" method="post">
+                                            <form id="categoryform" action="/admin/category" method="post">
                                                 <div class="mb-3">
                                                     <label for="recipient-name" class="col-form-label">Category
                                                         Name:</label>
                                                     <input type="text" class="form-control" name="category"
                                                         id="category">
-                                                    <span style="color: red;" id="category-error"></span>
+                                                    <span class="text-warning" id="category-error"></span>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
@@ -83,23 +83,23 @@
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <form action="/admin/edit-category/{{this._id}}"
+                                                                <form id="categoryform" action="/admin/edit-category/{{this._id}}"
                                                                     method="post">
                                                                     <div class="mb-3">
                                                                         <label for="recipient-name"
                                                                             class="col-form-label">Category
                                                                             Name:</label>
                                                                         <input type="text" class="form-control"
-                                                                            name="category" id="category"
+                                                                            name="category" id="{{category}}"
                                                                             value="{{category}}">
-                                                                        <span style="color: red;"
-                                                                            id="category-error"></span>
+                                                                        <span class="text-warning"
+                                                                            id="{{inc @index}}"></span>
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary"
                                                                             data-bs-dismiss="modal">Close</button>
                                                                         <button type="submit" id="submit"
-                                                                            class="btn btn-primary">Save</button>
+                                                                            class="btn btn-primary" onclick="return categoryvalid(event,'{{category}}','{{inc @index}}')">Save</button>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -137,12 +137,12 @@
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/admin/brand" method="post">
+                                            <form id="brand" action="/admin/brand" method="post">
                                                 <div class="mb-3">
                                                     <label for="recipient-name" class="col-form-label">Brand
                                                         Name:</label>
-                                                    <input type="text" class="form-control" name="brand" id="brand">
-                                                    <span style="color: red;" id="brand-error"></span>
+                                                    <input type="text" class="form-control" name="brand" id="brandname">
+                                                    <span class="text-warning" id="brand-error"></span>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
@@ -199,15 +199,15 @@
                                                                             class="col-form-label">Brand
                                                                             Name:</label>
                                                                         <input type="text" class="form-control"
-                                                                            name="brand" id="brand" value="{{brand}}">
-                                                                        <span style="color: red;"
-                                                                            id="brand-error"></span>
+                                                                            name="brand" id="{{brand}}" value="{{brand}}">
+                                                                        <span  class="text-warning"
+                                                                            id="brn{{inc @index}}"></span>
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary"
                                                                             data-bs-dismiss="modal">Close</button>
                                                                         <button type="submit" id="submitbrand"
-                                                                            class="btn btn-primary">Save</button>
+                                                                            class="btn btn-primary" onclick="return brandvalidate(event,'{{brand}}','brn{{inc @index}}')">Save</button>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -248,7 +248,7 @@
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/admin/subcategory" method="post">
+                                            <form id="subcategory" action="/admin/subcategory" method="post">
                                                 <div class="mb-3">
                                                     <label for="">Catagory</label>
                                                     {{!-- <input type="text" name="status" class="form-control"
@@ -263,6 +263,7 @@
 
 
                                                     </select>
+                                                    <span class="text-warning" id="cat-error"></span>
                                                 </div>
 
 
@@ -270,8 +271,8 @@
                                                     <label for="recipient-name" class="col-form-label">Sub Category
                                                         Name:</label>
                                                     <input type="text" class="form-control" name="subCategory"
-                                                        id="subcategory">
-                                                    <span style="color: red;" id="sub-error"></span>
+                                                        id="subcategory_id">
+                                                    <span class="text-warning" id="sub-error"></span>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
@@ -332,7 +333,7 @@
                                                                         {{!-- <input type="text" name="status"
                                                                             class="form-control"
                                                                             value="{{user.status}}"> --}}
-                                                                        <select name="catagoryId" id="categoryId"
+                                                                        <select name="catagoryId" id="categoryIdEdit"
                                                                             class="form-select"
                                                                             aria-label="Default select example">
                                                                             <option value="{{this.subcategory._id}}">
@@ -353,16 +354,18 @@
                                                                             class="col-form-label">Sub Category
                                                                             Name:</label>
                                                                         <input type="text" class="form-control"
-                                                                            name="subCategory" id="subcategoryedit"
+                                                                            name="subCategory" id="{{this.subCategory}}"
                                                                             value="{{this.subCategory}}">
-                                                                        <span style="color: red;"
-                                                                            id="subcategoryedit-error"></span>
+                                                                        <span class="text-warning"
+                                                                            id="sub{{inc @index}}"></span>
+
+                                                                            
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary"
                                                                             data-bs-dismiss="modal">Close</button>
                                                                         <button type="submit" id="submitsubcategory"
-                                                                            class="btn btn-primary">Save</button>
+                                                                            class="btn btn-primary" onclick="return subvalidate(event,'{{this.subCategory}}','sub{{inc @index}}')" >Save</button>
                                                                     </div>
                                                                 </form>
                                                             </div>

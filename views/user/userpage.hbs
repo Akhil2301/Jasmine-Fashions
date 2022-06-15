@@ -150,7 +150,7 @@
 
                                         <span style="float: right;"> <a class="" href="/Edit-Address/{{this._id}}"><i
                                                     class="	fas fa-edit"></i></a>
-                                            <a class="" href="/delete-Address/{{this._id}}"><i
+                                            <a class="" href="/delete-Address/{{this._id}}" onclick="confirmation(event)"><i
                                                     class="fa fa-trash text-danger"></i></a>
                                         </span>
                                         {{!-- <a class="btn btn-info bg-info col-2 "
@@ -171,7 +171,7 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Coupons</h5>
+                                                    <h5 class="card-title"> Address</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                                 </div>
@@ -179,30 +179,36 @@
                                                     <div class="col-lg-12">
                                                         <div class="card">
                                                             <div class="card-body">
-                                                                <h5 class="card-title"> Address</h5>
+
 
                                                                 <!-- Vertical Form -->
-                                                                <form class="row g-3" action="/add-addressuser"
-                                                                    method="post">
+                                                                <form class="row g-3" id="Addressaccount"
+                                                                    action="/add-addressuser" method="post">
 
                                                                     <div class="col-12">
                                                                         <label for="inputEmail4"
-                                                                            class="form-label">Address</label>
+                                                                            class="form-label">Address </label>
                                                                         <input type="text" name="address"
-                                                                            class="form-control" id="address">
+                                                                            class="form-control" id="addressaccount">
+                                                                        <span class="text-warning"
+                                                                            id="erroraddressaccount"></span>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <label for="inputEmail4"
                                                                             class="form-label">City</label>
                                                                         <input type="text" name="city"
-                                                                            class="form-control" id="city">
+                                                                            class="form-control" id="cityaccount">
+                                                                        <span class="text-warning"
+                                                                            id="errorcityaccount"></span>
                                                                     </div>
 
                                                                     <div class="col-12">
                                                                         <label for="inputEmail4"
                                                                             class="form-label">zip</label>
                                                                         <input type="text" name="zip"
-                                                                            class="form-control" id="zip">
+                                                                            class="form-control" id="zipaccount">
+                                                                        <span class="text-warning"
+                                                                            id="errorzipaccount"></span>
                                                                     </div>
 
                                                                     <div class="col-12">
@@ -257,3 +263,48 @@
         </div>
     </div>
 </section>
+<script>
+    /*************validate Address ******/
+    const form = document.getElementById('Addressaccount')
+
+
+
+
+    form.addEventListener('submit', (e) => {
+
+        const address = document.getElementById('addressaccount').value
+        const city = document.getElementById('cityaccount').value
+        const zip = document.getElementById('zipaccount').value
+        //alert(address)
+        
+        if (address == '') {
+
+            document.getElementById('erroraddressaccount').innerHTML = 'Address Required ..!';
+            e.preventDefault()
+
+        } else {
+            document.getElementById('erroraddressaccount').innerHTML = '';
+        }
+
+        if (city == '') {
+
+            document.getElementById('errorcityaccount').innerHTML = 'City Required ..!';
+            e.preventDefault()
+
+        } else {
+            document.getElementById('errorcityaccount').innerHTML = '';
+        }
+        if (zip == '') {
+
+            document.getElementById('errorzipaccount').innerHTML = 'Zip Required ..!';
+            e.preventDefault()
+
+        } else {
+            document.getElementById('errorzipaccount').innerHTML = '';
+        }
+
+
+
+    })
+/******* End ******/
+</script>

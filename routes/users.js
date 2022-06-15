@@ -13,7 +13,6 @@ const createInvoiceHelp =require('../helpers/pdfgenerator')
 
 
 
-
 const router = express.Router();
 const urlencodedParser = bodyParser.urlencoded({extended: false})
 
@@ -25,12 +24,13 @@ const client = require('twilio')(accountSid, authToken);
 
 
 const verifyLogin = async(req, res, next) => {
+   
     if (req.session.loggedIn) {
         
         next();
     } else {
         
-        res.redirect('/')
+        res.redirect('/login')
     }
 }
 
@@ -52,23 +52,7 @@ const cartcnt = (req, res, next) => {
        
            
    
-    
-
-
-
-// const profilevalaidation = async (req, res) => {
-//     let userid = req.session.user._id
-//     let user = await userHelper.userDetail(userid);
-
-
-//     if (req.session.loggedIn) {
-//          next();
-//     } else {
-//         res.redirect('/login')
-//     }
-
-
-// }
+  
 
 
 /* GET users listing. */
@@ -136,6 +120,7 @@ router.post('/login', async function (req, res) {
 });
 /*Get Signup Page.*/
 router.get('/signup',async function (req, res) {
+    
     headers=await userHelper.getHeader()
     if(req.query){
          referal_name=req.query.ref_name
@@ -144,7 +129,7 @@ router.get('/signup',async function (req, res) {
         referal_name="" 
     }
     
-    res.render('user/signup',{referal_name,headers});
+    res.render('user/signup',{referal_name,headers,err_msg:''});
 });
 
 /*Post Signup Page.*/
@@ -167,7 +152,7 @@ router.post('/signup', async (req, res) => {
             }).then(verification => res.render('user/otp', {name_body: req.body,headers}));
 
         } else { // console.log('error')
-            res.render('user/signup', {err_msg: 'User Already exist',headers})
+            res.render('user/signup', {err_msg: 'User  Already exist',headers})
 
         }
 

@@ -108,7 +108,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Coupons</h5>
+                                    <h5 class="card-title">ADDRESS</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -116,24 +116,28 @@
                                     <div class="col-lg-12">
                                         <div class="card">
                                             <div class="card-body">
-                                                <h5 class="card-title">Delivery Address</h5>
+
 
                                                 <!-- Vertical Form -->
-                                                <form class="row g-3" action="/add-addressuser" method="post">
+                                                <form class="row g-3" id="Address" action="/add-addressuser"
+                                                    method="post">
 
                                                     <div class="col-12">
                                                         <label for="inputEmail4" class="form-label">Address</label>
                                                         <input type="text" name="address" class="form-control"
                                                             id="address">
+                                                        <span class="text-warning" id="errorAddress"></span>
                                                     </div>
                                                     <div class="col-12">
                                                         <label for="inputEmail4" class="form-label">City</label>
                                                         <input type="text" name="city" class="form-control" id="city">
+                                                        <span class="text-warning" id="errorCity"></span>
                                                     </div>
 
                                                     <div class="col-12">
                                                         <label for="inputEmail4" class="form-label">zip</label>
                                                         <input type="text" name="zip" class="form-control" id="zip">
+                                                        <span class="text-warning" id="errorzip"></span>
                                                     </div>
 
                                                     <div class="col-12">
@@ -175,11 +179,11 @@
 
                         <div class="card " style="width:18rem;">
                             <div class="card-body">
-                                
+
                                 <h5 class="card-title">Address
-                                    <span style="float: right;" > <a class="" href="/Edit-Address/{{this._id}}"><i
+                                    <span style="float: right;"> <a class="" href="/Edit-Address/{{this._id}}"><i
                                                 class="	fas fa-edit"></i></a>
-                                        <a class="" href="/delete-Address/{{this._id}}"><i
+                                        <a class="" href="/delete-Address/{{this._id}}" onclick="confirmation(event)"><i
                                                 class="fa fa-trash text-danger"></i></a>
                                     </span>
                                 </h5>

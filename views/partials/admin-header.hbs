@@ -45,7 +45,7 @@
     <header id="header" class="header fixed-top d-flex align-items-center">
 
         <div class="d-flex align-items-center justify-content-between">
-            <a href="index.html" class="logo d-flex align-items-center">
+            <a href="/admin" class="logo d-flex align-items-center">
                 {{!-- <img src="assets/img/logo.png" alt=""> --}}
                 <span class="d-none d-lg-block">Jasmin Fashions</span>
             </a>
@@ -107,7 +107,7 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link " href="/">
+                <a class="nav-link " href="/admin">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
@@ -129,6 +129,19 @@
                             <i class="bi bi-circle"></i><span>Product</span>
                         </a>
                     </li>
+                   
+                    
+
+                </ul>
+            </li><!-- End Components Nav -->
+
+ <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#components-nav2" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Offer Management</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="components-nav2" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    
                     <li>
                         <a href="/admin/offer">
                             <i class="bi bi-circle"></i><span>Offers</span>
@@ -153,6 +166,9 @@
 
                 </ul>
             </li><!-- End Components Nav -->
+
+
+
 
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
@@ -182,7 +198,7 @@
                     </li>
                     <li>
                         <a href="/admin/dailyreport">
-                            <i class="bi bi-circle"></i><span>Daily Report</span>
+                            <i class="bi bi-circle"></i><span>Daily Summary</span>
                         </a>
                     </li>
 

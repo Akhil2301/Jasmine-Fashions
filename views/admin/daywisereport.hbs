@@ -9,12 +9,24 @@
               <h5 class="card-title">Sale Summary</h5>
 
               <p id="date_filter">
+
               <form action="#" id="date-range">
+                
+                {{#when head_data 'eq' ''}}
                 <span id="date-label-from" class="date-label">From:
                 </span><input class="date_range_filter date" name="fromdate" type="date" id="datepicker_from" />
                 <span id="date-label-to" class="date-label">To:</span>
                 <input class="date_range_filter
           date" type="date" id="datepicker_to" name="todate" />
+                {{/when}}
+
+                {{#when head_data 'noteq' ''}}
+                <span id="date-label-from" class="date-label">From:
+                </span><input class="date_range_filter date" name="fromdate" value="{{startDate}}" type="date" id="datepicker_from" />
+                <span id="date-label-to" class="date-label">To:</span>
+                <input class="date_range_filter
+          date" type="date" id="datepicker_to" value="{{endDate}}" name="todate" />
+                {{/when}}
 
                 <button class="btn btn-primary bg-primary btn-lg btn-block text-info" type="submit">Refresh</button>
 
@@ -49,19 +61,19 @@
                   </tr>
 
                   {{/each}}
-               <thead>
+                  <thead>
 
-                  <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Total</th>
-                    <th scope="col">{{totalam}}</th>
-                    <th scope="col">{{walpay}}</th>
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Total</th>
+                      <th scope="col">{{totalam}}</th>
+                      <th scope="col">{{walpay}}</th>
 
 
 
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
 
                 </tbody>
               </table>

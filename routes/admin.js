@@ -401,6 +401,8 @@ router.post('/offer/:id',(req,res)=>{
     
     })
   })
+
+  
   
 
 router.get('/Offer-remove/:id',(req,res)=>{
@@ -505,7 +507,7 @@ router.get('/monthlyreport', verifyLogin, async(req, res)=>{
       
         
    
-     res.render('admin/daywisereport', { report, admin: req.session.admin,admins:true,ad_log:true,head_data,totalam,walpay},function(err,html){
+     res.render('admin/daywisereport', {startDate,endDate, report, admin: req.session.admin,admins:true,ad_log:true,head_data,totalam,walpay},function(err,html){
         res.send(html)
      })
 
@@ -536,6 +538,19 @@ router.get('/coupon',verifyLogin, (req, res) => {
       res.redirect('/admin/coupon')
     })
   })
+
+
+  router.post('/edit-coupon/:id',(req,res)=>{  
+  
+    productHelper.updateCoupon(req.body,req.params.id).then(async(response)=>{    
+      
+      res.redirect('/admin/coupon') 
+  
+    
+    })
+  })
+
+
   
 
   
@@ -576,6 +591,23 @@ router.post('/categoryoff/:id', verifyLogin, async (req, res, next) => {
   })
   
 })
+
+router.get('/delete-categoryoff/:id', verifyLogin, async (req, res, next) => {
+ 
+  productHelper.removecatOffer(req.body,req.params.id).then(async(response)=>{ 
+    productHelper.removeProductamtcatoff(req.body,req.params.id).then(async(response)=>{
+      res.redirect('/admin/categoryoff') 
+    })   
+   
+  })
+  
+})
+
+
+
+
+
+
 
 
 /* GET home page. */

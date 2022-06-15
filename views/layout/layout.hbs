@@ -44,26 +44,10 @@
 
   {{#if admin}}
   {{else}}
-  <footer class="page-footer text-center font-small mt-4 wow fadeIn">
-
-   
-
-    <hr class="my-4">
-
-    <!-- Social icons -->
-    <div class="pb-4">
-      
-    </div>
-    <!-- Social icons -->
-
-    <!--Copyright-->
-    <div class="footer-copyright py-3">
-      © 2022 Copyright:
-      <a href="" style="text-decoration:none ;"> Jasmin Fashions </a>
-    </div>
-    <!--/.Copyright-->
-
-  </footer>
+  {{#if admins}}
+    {{else}}
+    {{>footer-head}}
+  {{/if}}
   {{/if}}
 
   <!-- Adding jQuery -->
@@ -110,7 +94,7 @@
   <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
   <script src="/assets/vendor/php-email-form/validate.js"></script>
   <script src="/javascripts/main.js"></script>
-
+<script src="/javascripts/adminvalidation.js"></script>
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
   {{/if}}

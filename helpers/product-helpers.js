@@ -139,7 +139,7 @@ var objectId = require('mongodb').ObjectId
 
                 ]).toArray()
                 resolve(subcategory)
-                console.log(subcategory)
+              
 
             })
 
@@ -553,6 +553,35 @@ resolve(products[0])
 
     },
 
+    updateCoupon: (offer, coid) => {
+       console
+        return new Promise((resolve, reject) => {
+
+            db.get().collection(collection.COUPON_COLLETION).updateOne({
+                _id: objectId(coid)
+            }, {
+                $set: {
+
+                    coupon: offer.coupon,
+                    percentage: offer.percentage,
+                    startoffer:offer.startoffer,
+                    endoffer:offer.endoffer,
+                    
+
+                }
+
+            }).then((response) => {
+                resolve(response)
+            }).catch((err) => {
+                console.log('err' + err)
+            })
+        })
+
+    },
+
+
+
+
     removeOffer: (proid) => {
 
 
@@ -630,6 +659,62 @@ resolve(products[0])
             })
         })
     },
+
+
+
+    removecatOffer: (offer, proid) => {
+
+        
+
+        return new Promise((resolve, reject) => {
+
+            db.get().collection(collection.CATEGORY_COLLECTION).updateOne({
+                _id: objectId(proid)
+            }, {
+                $set: {
+
+                    offerper: parseInt(0),
+                    status: false,
+                    // strdate:offer.categoryoffstrdate,
+                    // enddate:offer.categoryoffenddate,
+                }
+
+            }).then((response) => {
+
+
+                resolve(response)
+            }).catch((err) => {
+                console.log('err' + err)
+            })
+        })
+
+    },
+
+    removeProductamtcatoff: (offer, proid) => {
+
+       
+
+        return new Promise((resolve, reject) => {
+
+            db.get().collection(collection.PRODUCT_COLLECTIOS).updateMany({
+                catagoryId: objectId(proid)
+            }, {
+                $set: { // status:true,
+                    catofferper: 0,
+                    catoffstatus: false,
+                  
+
+                }
+
+            }).then((response) => {
+                resolve(response)
+            }).catch((err) => {
+                console.log('err' + err)
+            })
+        })
+    },
+
+
 
     createReferalValue: (value) => {
         return new Promise((resolve, reject) => {

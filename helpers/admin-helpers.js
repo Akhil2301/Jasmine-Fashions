@@ -473,7 +473,7 @@ module.exports = {
                
 
             ]).toArray()
-           console.log(orderperday[0])
+           //console.log(orderperday[0])
             resolve(orderperday[0])
 
         })

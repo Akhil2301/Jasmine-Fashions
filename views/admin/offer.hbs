@@ -39,7 +39,7 @@
                                        {{#if status}}
                                         <td>
                                             <a class="btn btn-danger" href="/admin/Offer-remove/{{this._id}}"
-                                                onclick="confirmation(event)">Remove Offer
+                                                onclick="removeoff(event)">Remove Offer
                                         </td>
                                         {{else}}
                                         <td>
@@ -58,41 +58,24 @@
                                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form action="/admin/offer/{{this._id}}" method="post">
+                                                            <form  action="/admin/offer/{{this._id}}" method="post">
                                                                 <div class="mb-3">
                                                                     <label for="recipient-name"
                                                                         class="col-form-label">offer
                                                                         Percentage:</label>
                                                                     <input type="text" class="form-control" name="offer"
-                                                                        id="offer" required>
+                                                                        id="offer_per">
                                                                         <input type="hidden" class="form-control" name="price"
                                                                         id="price" value="{{price}}">
-                                                                    <span style="color: red;" id="offer-error"></span>
+                                                                    <span class="text-warning" id="offer-error"></span>
                                                                 </div>
-                                                                {{!-- <div class="mb-3">
-                                                                    <label for="recipient-name"
-                                                                        class="col-form-label">offer
-                                                                        Starting date:</label>
-                                                                    <input type="date" class="form-control"
-                                                                        name="strdate" id="strdate" value="n"
-                                                                        required>
-                                                                    <span style="color: red;" id="strdate-error"></span>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label for="recipient-name"
-                                                                        class="col-form-label">offer
-                                                                        End date:</label>
-                                                                    <input type="date" class="form-control"
-                                                                        name="enddate" id="enddate" value="{{enddate}}"
-                                                                        required>
-                                                                    <span style="color: red;" id="enddate-error"></span>
-                                                                </div> --}}
+                                                              
 
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"
                                                                         data-bs-dismiss="modal">Close</button>
-                                                                    <button type="submit" id="submit"
-                                                                        class="btn btn-primary">Save</button>
+                                                                    <button type="submit" 
+                                                                        class="btn btn-primary" onclick="return Offervalidate(event)">Saves</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -117,37 +100,4 @@
     </section>
 
 </main><!-- End #main -->
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script>
-    function viewImage(event) {
-        document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0])
-    }
-
-    function confirmation(ev) {
-
-        ev.preventDefault();
-        var urlToRedirect = ev.currentTarget.getAttribute('href'); //use currentTarget because the click may be on the nested i tag and not a tag causing the href to be empty
-
-        swal({
-            title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this  data!",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-            .then((willDelete) => {
-                // redirect with javascript here as per your logic after showing the alert using the urlToRedirect value
-                if (willDelete) {
-                    swal("Poof! Your  file has been deleted!", {
-                        icon: "success",
-
-                    });
-                    location.href = urlToRedirect
-                } else {
-
-                    swal("Your  file is safe!");
-
-                }
-            });
-    }
-</script>
+{{!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}

@@ -8,15 +8,22 @@
                         <div class="card-body p-4 text-center">
 
                             <h3 class="mb-3">Sign Up</h3>
-                            <span style="color: red;">{{err_msg}}</span>
+                            {{!-- <span style="color: red;" id="user_exist">{{err_msg}}</span> --}}
+                            {{#if err_msg}}
+                            <div class="alert alert-warning" id="error-alert">
+                                <button type="button" class="border-0" data-dismiss="alert">x</button>
+                                <strong>{{err_msg}}</strong>
+
+                            </div>
+                            {{/if}}
                             <br>
-                             <br>
+                            <br>
                             <form action="/signup" method="post" name="myform">
-                            <div class="form-outline mb-3">
+                                <div class="form-outline mb-3">
 
                                     <input type="text" name="referal" id="referal" class="form-control form-control-lg"
                                         placeholder="referal" value="{{referal_name}}" style="display:none ;" />
-                                    <small style="color: red;"></small>
+                                    <s class="text-info"></s>
 
                                 </div>
 
@@ -24,38 +31,40 @@
 
                                     <input type="text" name="fname" id="fnames" class="form-control form-control-lg"
                                         placeholder="First Name" />
-                                    <span id="errorfname" style="color: red;"></span>
+                                    <span id="errorfname" class="text-warning"></span>
 
                                 </div>
                                 <div class="form-outline mb-3">
                                     <input type="text" name="lname" id="lname" class="form-control form-control-lg"
                                         placeholder="Last Name" />
-                                    <span id="errorlname" style="color: red;"></span>
-                               
+                                    <span id="errorlname" class="text-warning"></span>
+
                                 </div>
 
                                 <div class="form-outline mb-3">
                                     <input type="email" name="email" id="email" class="form-control form-control-lg"
                                         placeholder="Email" />
-                                    <span id="erroremail" style="color: red;"></span>
-                                   
+                                    <span id="erroremail" class="text-warning"></span>
+
                                 </div>
 
                                 <div class="form-outline mb-3">
                                     <input type="text" name="phone" id="phone" class="form-control form-control-lg"
                                         placeholder="Phone Number" />
-                                   <span id="errorphone" style="color: red;"></span>
+                                    <span id="errorphone" class="text-warning"></span>
                                 </div>
 
                                 <div class="form-outline mb-3">
                                     <input type="password" name="password" id="password"
-                                        class="form-control form-control-lg" placeholder="Password" autocomplete="off" />
-                                    <span id="errorpassword" style="color: red;"></span>
+                                        class="form-control form-control-lg" placeholder="Password"
+                                        autocomplete="off" />
+                                    <span id="errorpassword" class="text-warning"></span>
                                 </div>
 
 
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-primary" onclick="return validation(event)" type="submit" >Sign
+                                    <button class="btn btn-primary" onclick="return validation(event)"
+                                        type="submit">Sign
                                         Up</button>
                                 </div>
 
@@ -63,7 +72,7 @@
                                 <a href="/login" class="justify-content-end" style="text-decoration: none;"><span
                                         style="color: rgb(215, 42, 215);">Login?</span> All ready an Account</a>
                             </form>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -72,6 +81,3 @@
     </section>
 
 </div>
-
-
-

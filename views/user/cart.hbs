@@ -258,9 +258,10 @@
                   <div class="modal-body">
 
                     <div class="addressbook">
-                      <a href="/add-address" style="position:relative; top:0; left:50px;">
+                      <a href="/add-address" style="text-decoration:none; position:relative; top:0; left:50px;">
                         + Add New Address
                       </a>
+                      <hr>
                       <input type="hidden" name="tot" id="userId" value="{{user._id}}">
 
                     </div>
@@ -296,8 +297,8 @@
                               <a href="#" class="editAddress">Edit</a> --}}
 
 
-                              <span> <a class="" href="/Edit-Address/{{_id}}">Edit</a>
-                                <a class="" href="/delete-Address/{{_id}}">Delete</a>
+                              <span> <a class="mx-3" href="/Edit-Address/{{_id}}" style="text-decoration:none;">Edit</a>
+                                <a class="" style="text-decoration:none;" href="/delete-Address/{{_id}}">Delete</a>
                               </span>
                             </div>
                           </div>
@@ -318,7 +319,9 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      {{#if address}}
                       <button type="submit" class="btn btn-primary">Deliver Here</button>
+                    {{/if}}
                     </div>
                   </form>
                 </div>
