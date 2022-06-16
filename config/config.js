@@ -1,12 +1,11 @@
 const mongodb=require('mongodb').MongoClient
-
 const state={
     db:null
 }
 
 
 module.exports.connect=(done)=>{
-    const url='mongodb://127.0.0.1:27017';
+    const url=process.env.MONGO_URI;
     const dbname='Jasmin_Fashions'
 
 
@@ -23,3 +22,5 @@ module.exports.connect=(done)=>{
 module.exports.get=()=>{
     return state.db
 }
+
+

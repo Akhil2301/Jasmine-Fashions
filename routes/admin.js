@@ -289,7 +289,7 @@ router.post('/edit-product/:id',verifyLogin,async(req,res)=>{
     
       arr.push(req.files[index].filename)
     })
-    console.log(req.params.id)
+    
       productHelper.updateProductWithFiles(req.params.id,arr).then(()=>{
 
         res.redirect('/admin/product')
@@ -353,7 +353,7 @@ router.get('/user',verifyLogin,(req,res)=>{
   
     let orders=await adminHelpers.getOrderList()
     
-    res.render('admin/order',{admin: req.session.user,orders,admins:true,ad_log:true,})
+    res.render('admin/order',{admin: req.session.admin,orders,admins:true,ad_log:true,})
   
   })
   

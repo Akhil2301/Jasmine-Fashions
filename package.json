@@ -3,16 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "start": "cross-env NODE_ENV =production node app",
+    "dev": "cross-env NODE_ENV=development nodemon app"
   },
   "dependencies": {
+    "audit": "^0.0.6",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "cookie-parser": "~1.4.4",
     "cropperjs": "^1.5.12",
+    "D": "^1.0.0",
     "debug": "~2.6.9",
+    "dotenv": "^16.0.1",
     "express": "~4.16.1",
     "express-handlebars": "^6.0.6",
     "express-session": "^1.17.3",
@@ -32,6 +35,7 @@
     "twilio": "^3.77.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.16"
   }
 }

@@ -7,9 +7,9 @@ const userHelpers = require('../helpers/user-helpers');
 const sortHelper=require('../helpers/sort-helper');
 const { response } = require('express');
 var objectId = require('mongodb').ObjectId
-const createInvoiceHelp =require('../helpers/pdfgenerator')
-
- 
+//const createInvoiceHelp =require('../helpers/pdfgenerator')
+const dotenv=require('dotenv');
+dotenv.config({path:'./config/config.env'})
 
 
 
@@ -17,10 +17,10 @@ const router = express.Router();
 const urlencodedParser = bodyParser.urlencoded({extended: false})
 
 
-const accountSid = "AC55b870c0d8c96e1ff76e84c585db02db";
-const authToken = "9350f3667aae4dda008d253621e91c50";
-const serviceid = "VA8c4913d5591c069a8a6d6d49bbf7162c";
-const client = require('twilio')(accountSid, authToken);
+const accountSid =process.env.TWILIO_ACCOUNT_ID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+ const serviceid = process.env.TWILIO_SERVICE;
+const client = require('twilio')(process.env.TWILIO_ACCOUNT_ID, process.env.TWILIO_AUTH_TOKEN);
 
 
 const verifyLogin = async(req, res, next) => {
@@ -57,7 +57,7 @@ const cartcnt = (req, res, next) => {
 
 /* GET users listing. */
 router.get('/', async function (req, res) { // console.log(req.body._id)
-
+   // console.log(accountSid)
     headers=await userHelper.getHeader()
   
     cartCount = null

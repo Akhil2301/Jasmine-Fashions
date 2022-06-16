@@ -3,15 +3,18 @@ var collection = require('../config/collection');
 const bcrypt = require('bcrypt');
 const Razorpay = require('razorpay')
 var objectId = require('mongodb').ObjectId
-var instance = new Razorpay({key_id: 'rzp_test_Vldb0EmPlRSPUM', key_secret: 'jh7UxH26ViUIDmlsgLWvc7Ee'});
+const dotenv=require('dotenv');
+dotenv.config({path:'./config/config.env'})
+
+var instance = new Razorpay({key_id: process.env.RAZOR_ID, key_secret: process.env.RAZOR_SECRET_ID});
 
 const paypal = require('paypal-rest-sdk');
 
 
 paypal.configure({
     'mode': 'sandbox', // sandbox or live
-    'client_id': 'AQ4UUZ0AXYLUXPc-lD4-qsWZf45KQRbPEhZ9QFVlFg082TSunhKTr3T4P6FcYKsI5ZOoqN9EyphsUHQ5',
-    'client_secret': 'ELoL79RXMQm9gzxUbSgXLKB00PomgdMBlOd48w8OVu9WPq6MumFLalNx3cNCnfqPeH9X7XspoEvy-Pdu'
+    'client_id': process.env.CLIENT_ID,
+    'client_secret': process.env.CLIENT_SECRET
 });
 
 
