@@ -47,7 +47,11 @@ const cartcnt = (req, res, next) => {
         res.redirect('/login')
     }
 }
+/*Get Login Page. */
+router.get('/404',async function (req, res) {
+   res.render('error')
 
+});
     
        
            
@@ -58,6 +62,8 @@ const cartcnt = (req, res, next) => {
 /* GET users listing. */
 router.get('/', async function (req, res) { // console.log(req.body._id)
    // console.log(accountSid)
+
+   try{
     headers=await userHelper.getHeader()
   
     cartCount = null
@@ -78,7 +84,10 @@ router.get('/', async function (req, res) { // console.log(req.body._id)
 
         }
     })
-
+}
+catch{
+   res.redirect('/404')
+}
 
 });
 
@@ -92,7 +101,7 @@ router.get('/login',async function (req, res) {
             res.render('user/login',{headers});
         }
     } catch (error) {
-        res.send("500")
+        res.redirect('/404')
     }
 
 
@@ -100,6 +109,8 @@ router.get('/login',async function (req, res) {
 
 /*post login Page.*/
 router.post('/login', async function (req, res) {
+
+    try{
     headers=await userHelper.getHeader()
 
     userHelper.doLogin(req.body).then((response) => {
@@ -116,11 +127,13 @@ router.post('/login', async function (req, res) {
             res.render('user/login', {err_msg: 'Enter the correct credential',headers})
         }
     })
-
+}catch{
+    res.redirect('/404')
+}
 });
 /*Get Signup Page.*/
 router.get('/signup',async function (req, res) {
-    
+    try{
     headers=await userHelper.getHeader()
     if(req.query){
          referal_name=req.query.ref_name
@@ -130,38 +143,44 @@ router.get('/signup',async function (req, res) {
     }
     
     res.render('user/signup',{referal_name,headers,err_msg:''});
+}catch{
+    res.redirect('/404')
+}
 });
 
 /*Post Signup Page.*/
 router.post('/signup', async (req, res) => {
-    headers=await userHelper.getHeader()
-    if (req.body.email != undefined && req.body.phone != undefined && req.body.fname != undefined && req.body.lname != undefined && req.body.phone != undefined && req.body.password != undefined) {
-        let email = await userHelper.emailcheck(req.body)
-        let phone = await userHelper.phonecheck(req.body)
-        
-        if (email.status && phone.status) {
 
-            res.render('user/signup', {err_msg: 'User is already exist',headers})
-        } else if (! email.status && ! phone.status) {
-
-            client.verify.services(serviceid).verifications.create({
-                    to: `+91${
-                    req.body.phone
-                }`,
-                channel: 'sms'
-            }).then(verification => res.render('user/otp', {name_body: req.body,headers}));
-
-        } else { // console.log('error')
-            res.render('user/signup', {err_msg: 'User  Already exist',headers})
-
+   
+        headers=await userHelper.getHeader()
+        if (req.body.email != undefined && req.body.phone != undefined && req.body.fname != undefined && req.body.lname != undefined && req.body.phone != undefined && req.body.password != undefined) {
+            let email = await userHelper.emailcheck(req.body)
+            let phone = await userHelper.phonecheck(req.body)
+            
+            if (email.status && phone.status) {
+    
+                res.render('user/signup', {err_msg: 'User is already exist',headers})
+            } else if (! email.status && ! phone.status) {
+    
+                client.verify.services(serviceid).verifications.create({
+                        to: `+91${
+                        req.body.phone
+                    }`,
+                    channel: 'sms'
+                }).then(verification => res.render('user/otp', {name_body: req.body,headers}));
+    
+            } else { // console.log('error')
+                res.render('user/signup', {err_msg: 'User  Already exist',headers})
+    
+            }
+    
+    
+        } else {
+            //console.log('error')
+            res.render('user/signup', {err_msg: 'Enter Every field Properly',headers})
+    
         }
-
-
-    } else {
-        //console.log('error')
-        res.render('user/signup', {err_msg: 'Enter Every field Properly',headers})
-
-    }
+   
 
 
 });

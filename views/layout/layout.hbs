@@ -9,36 +9,36 @@
 
   {{#if admins}}
 
- <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title></title>
-    <meta content="" name="description">
-    <meta content="" name="keywords">
+  <title></title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-    <!-- Favicons -->
-    <link href="/assets/img/favicon.png" rel="icon">
-    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <!-- Favicons -->
+  <link href="/assets/img/favicon.png" rel="icon">
+  <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-        rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
-    <!-- Vendor CSS Files -->
-    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-    <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
-    <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-    <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+  <!-- Vendor CSS Files -->
+  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
-    <!-- Template Main CSS File -->
-    <link href="/assets/css/style.css" rel="stylesheet">
+  <!-- Template Main CSS File -->
+  <link href="/assets/css/style.css" rel="stylesheet">
 
-    <!-- =======================================================
+  <!-- =======================================================
   * Template Name: NiceAdmin - v2.2.2
   * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
   * Author: BootstrapMade.com
@@ -47,8 +47,8 @@
 
 
 
-    
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   {{else}}
   <!---User Panel--->
   <!-- fontawesome cdn -->
@@ -60,7 +60,7 @@
   <link rel="stylesheet" href="/user/bootstrap-5.0.2-dist/css/bootstrap.min.css"> --}}
   <!-- custom css -->
   <link rel="stylesheet" href="/user/css/main.css">
-<link rel="stylesheet" href="/stylesheets/cropper.css">
+  <link rel="stylesheet" href="/stylesheets/cropper.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
   <!-- User Panel End--->
@@ -76,7 +76,7 @@
 
   {{else}}
   {{>user-header}}
-   
+
 
   {{/if}}
   {{{body}}}
@@ -84,8 +84,8 @@
   {{#if admin}}
   {{else}}
   {{#if admins}}
-    {{else}}
-    {{>footer-head}}
+  {{else}}
+  {{>footer-head}}
   {{/if}}
   {{/if}}
 
@@ -133,7 +133,7 @@
   <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
   <script src="/assets/vendor/php-email-form/validate.js"></script>
   <script src="/javascripts/main.js"></script>
-<script src="/javascripts/adminvalidation.js"></script>
+  <script src="/javascripts/adminvalidation.js"></script>
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
   {{/if}}
@@ -142,6 +142,19 @@
   <script src="/javascripts/validation.js"></script>
   <script src="/javascripts/cropper.js"></script>
   <script src="/javascripts/confirmation.js"></script>
+
+  <script>
+
+      $('input[type=radio][name=price]').change(function () {
+
+
+
+
+        window.location.href = `/shopsort/${this.value}`
+
+      });
+
+  </script>
 </body>
 
 </html>
