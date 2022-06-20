@@ -8,8 +8,8 @@ const sortHelper=require('../helpers/sort-helper');
 const { response } = require('express');
 var objectId = require('mongodb').ObjectId
 //const createInvoiceHelp =require('../helpers/pdfgenerator')
-const dotenv=require('dotenv');
-dotenv.config({path:'./config/config.env'})
+// const dotenv=require('dotenv');
+// dotenv.config({path:'./config/config.env'})
 
 
 

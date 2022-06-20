@@ -1,3 +1,4 @@
+require('dotenv').config()
 const createError = require('http-errors');
 const express = require('express');
 const hbs=require('express-handlebars');
@@ -6,7 +7,8 @@ const cookieParser = require('cookie-parser');
 const session=require('express-session')
 const logger = require('morgan');
 const HBS=require('handlebars')
-const dotenv=require('dotenv');
+// const dotenv=require('dotenv');
+
 const morgan=require('morgan');
 
 
@@ -14,7 +16,7 @@ const morgan=require('morgan');
 const adminRouter = require('./routes/admin');
 const usersRouter = require('./routes/users');
 
-dotenv.config({path:'./config/config.env'})
+//dotenv.config({path:'./config/config.env'})
 
 const  db=require('./config/config');
 db.connect((err)=>{
@@ -123,8 +125,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-const PORT=process.env.PORT||5000
-app.listen(PORT,
-    console.log(`server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
-    ) 
+// const PORT=process.env.PORT||5000
+// app.listen(PORT,
+//     console.log(`server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
+//     ) 
 module.exports = app;

@@ -1,5 +1,5 @@
-const dotenv=require('dotenv');
-dotenv.config({path:'./config/config.env'})
+// const dotenv=require('dotenv');
+// dotenv.config({path:'./config/config.env'})
 
 
 // var header = document.getElementById("sidebar");
@@ -125,9 +125,8 @@ function change(cartId,proId,userId,count){
     }
   
     function razorpayPayment(body, order) {
-      //console.log(order)
-      var options = {
-        "key": RAZOR_ID, // Enter the Key ID generated from the Dashboard
+        var options = {
+        "key": 'rzp_test_Vldb0EmPlRSPUM', // Enter the Key ID generated from the Dashboard
         "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
         "currency": "INR",
         "name": "Jasmin Fashions",

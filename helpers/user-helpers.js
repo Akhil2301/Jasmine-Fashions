@@ -3,8 +3,8 @@ var collection = require('../config/collection');
 const bcrypt = require('bcrypt');
 const Razorpay = require('razorpay')
 var objectId = require('mongodb').ObjectId
-const dotenv=require('dotenv');
-dotenv.config({path:'./config/config.env'})
+// const dotenv=require('dotenv');
+// dotenv.config({path:'./config/config.env'})
 
 var instance = new Razorpay({key_id: process.env.RAZOR_ID, key_secret: process.env.RAZOR_SECRET_ID});
 
