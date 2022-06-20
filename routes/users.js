@@ -96,7 +96,7 @@ router.get('/login',async function (req, res) {
     try {
         headers=await userHelper.getHeader()
         if (req.session.user) {
-            res.render('user/index', {user: req.session.user,headers})
+            res.render('user/otp', {user: req.session.user,headers})
         } else {
             res.render('user/login',{headers});
         }
